@@ -2209,6 +2209,14 @@
                 return matchesCategory && matchesSearch;
             });
 
+            // Pag-uuri (Sorting): Sisig muna (magkakatabi), tapos Add-ons, at Drinks sa pinaka-huli
+            itemsToDisplay.sort((a, b) => {
+                const order = { 'sisig': 1, 'addons': 2, 'drinks': 3 };
+                const orderA = order[a.category] || 4;
+                const orderB = order[b.category] || 4;
+                return orderA - orderB;
+            });
+
             if (itemsToDisplay.length === 0) {
                 menuGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--muted); margin-top: 30px;">No items found.</p>`;
                 return;
