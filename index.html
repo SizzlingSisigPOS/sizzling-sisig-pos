@@ -5,6 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sizzling Sisig POS & Admin System</title>
 
+    <!-- FIREBASE SDK CONFIGURATION -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, setDoc, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKLg-G466BEVLJRePS605z78etiWdDH0c",
+            authDomain: "sizzlingsisigpos.firebaseapp.com",
+            projectId: "sizzlingsisigpos",
+            storageBucket: "sizzlingsisigpos.appspot.com",
+            messagingSenderId: "847155578340",
+            appId: "1:847155578340:web:650459309559a0342a73f1",
+            measurementId: "G-HD3DVJH2XV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.colRef = (name) => collection(db, name);
+        window.docRef = (name, id) => doc(db, name, id);
+        window.setDocData = setDoc;
+        window.getDocsData = getDocs;
+        window.updateDocData = updateDoc;
+        window.deleteDocData = deleteDoc;
+        window.onSnapshotData = onSnapshot;
+
+        // I-trigger ang pag-load galing cloud pagbukas ng pahina
+        window.addEventListener("DOMContentLoaded", () => {
+            initCloudData();
+        });
+    </script>
+
     <style>
         :root {
             --maroon: #781d2b;
@@ -1632,71 +1665,13 @@
         const forgotPasswordForm = document.getElementById("forgotPasswordForm");
         const message = document.getElementById("message");
 
-        // LOCALSTORAGE KEYS
-        let accounts = JSON.parse(localStorage.getItem("sisig_accounts_v8")) || [
-            { 
-                id: 1, 
-                firstName: "System", 
-                lastName: "Admin", 
-                email: "admin@gmail.com", 
-                phoneNumber: "09170000000", 
-                securityQuestion: "What is your mother's maiden name?", 
-                securityAnswer: "Admin", 
-                username: "admin", 
-                password: "admin123", 
-                role: "admin", 
-                status: "approved" 
-            },
-            { 
-                id: 2, 
-                firstName: "Juan", 
-                lastName: "Dela Cruz", 
-                email: "juan@gmail.com", 
-                phoneNumber: "09181112222", 
-                securityQuestion: "What was the name of your first pet?", 
-                securityAnswer: "Doggy", 
-                username: "cashier1", 
-                password: "user123", 
-                role: "user", 
-                status: "approved" 
-            },
-            { 
-                id: 3, 
-                firstName: "Maria", 
-                lastName: "Santos", 
-                email: "maria@gmail.com", 
-                phoneNumber: "09193334444", 
-                securityQuestion: "In what city were you born?", 
-                securityAnswer: "Manila", 
-                username: "cashier2", 
-                password: "user123", 
-                role: "user", 
-                status: "pending" 
-            }
-        ];
-
-        let userActivityLogs = JSON.parse(localStorage.getItem("sisig_logs_v8")) || [
-            { username: "cashier1", action: "LOGIN", timestamp: new Date().toLocaleString() }
-        ];
-
-        let menuItems = JSON.parse(localStorage.getItem("sisig_menu_v8")) || [
-            { id: 1, name: "Tapa Sisig Without Rice", price: 55, stock: 15, category: "sisig", icon: "🥩" },
-            { id: 2, name: "Tapa Sisig With Rice", price: 65, stock: 15, category: "sisig", icon: "🥩" },
-            { id: 3, name: "Pork Sisig Without Rice", price: 55, stock: 20, category: "sisig", icon: "🍖" },
-            { id: 4, name: "Pork Sisig With Rice", price: 65, stock: 20, category: "sisig", icon: "🍖" },
-            { id: 5, name: "Chicken Sisig Without Rice", price: 55, stock: 12, category: "sisig", icon: "🍗" },
-            { id: 6, name: "Chicken Sisig With Rice", price: 65, stock: 12, category: "sisig", icon: "🍗" },
-            { id: 7, name: "Extra Rice", price: 15, stock: 50, category: "addons", icon: "🍚" },
-            { id: 8, name: "Extra Egg", price: 15, stock: 40, category: "addons", icon: "🥚" },
-            { id: 12, name: "Coke", price: 25, stock: 30, category: "drinks", icon: "🥤" },
-            { id: 13, name: "Water - Small", price: 15, stock: 40, category: "drinks", icon: "💧" },
-            { id: 14, name: "Water - Big", price: 25, stock: 30, category: "drinks", icon: "🍾" },
-            { id: 15, name: "Mountain Dew", price: 25, stock: 25, category: "drinks", icon: "🥤" }
-        ];
-
-        let takeoutFeeSetting = parseFloat(localStorage.getItem("sisig_takeout_fee_v8")) || 10;
-        let salesHistory = JSON.parse(localStorage.getItem("sisig_sales_v8")) || [];
-        let orderCounter = parseInt(localStorage.getItem("sisig_counter_v8")) || 1001;
+        // CLOUD-BASED ARRAYS & CONFIG
+        let accounts = [];
+        let userActivityLogs = [];
+        let menuItems = [];
+        let takeoutFeeSetting = 10;
+        let salesHistory = [];
+        let orderCounter = 1001;
 
         let currentUser = JSON.parse(localStorage.getItem("sisig_current_user_v8")) || null;
         let cart = [];
@@ -1705,44 +1680,109 @@
         let currentCategory = 'all';
         let currentReportFilter = 'day';
 
-        // SAVE STATE TO LOCALSTORAGE
-        function saveData() {
-            localStorage.setItem("sisig_accounts_v8", JSON.stringify(accounts));
-            localStorage.setItem("sisig_logs_v8", JSON.stringify(userActivityLogs));
-            localStorage.setItem("sisig_menu_v8", JSON.stringify(menuItems));
-            localStorage.setItem("sisig_takeout_fee_v8", takeoutFeeSetting);
-            localStorage.setItem("sisig_sales_v8", JSON.stringify(salesHistory));
-            localStorage.setItem("sisig_counter_v8", orderCounter);
-            if (currentUser) {
-                localStorage.setItem("sisig_current_user_v8", JSON.stringify(currentUser));
-            } else {
-                localStorage.removeItem("sisig_current_user_v8");
+        // INITIALIZE CLOUD DATA FROM FIREBASE FIRESTORE WITH REALTIME LISTENERS
+        async function initCloudData() {
+            try {
+                // 1. Accounts initial check and default admin setup
+                const accSnap = await window.getDocsData(window.colRef("accounts"));
+                if (accSnap.empty) {
+                    const defaultAdmin = { 
+                        id: "1", 
+                        firstName: "System", 
+                        lastName: "Admin", 
+                        email: "admin@gmail.com", 
+                        phoneNumber: "09170000000", 
+                        securityQuestion: "What is your mother's maiden name?", 
+                        securityAnswer: "Admin", 
+                        username: "admin", 
+                        password: "admin123", 
+                        role: "admin", 
+                        status: "approved" 
+                    };
+                    await window.setDocData(window.docRef("accounts", "1"), defaultAdmin);
+                }
+
+                // 2. Menu Items initial check and default menu setup
+                const menuSnap = await window.getDocsData(window.colRef("menu"));
+                if (menuSnap.empty) {
+                    const defaultMenu = [
+                        { id: 1, name: "Tapa Sisig Without Rice", price: 55, stock: 15, category: "sisig", icon: "🥩" },
+                        { id: 2, name: "Tapa Sisig With Rice", price: 65, stock: 15, category: "sisig", icon: "🥩" },
+                        { id: 3, name: "Pork Sisig Without Rice", price: 55, stock: 20, category: "sisig", icon: "🍖" },
+                        { id: 4, name: "Pork Sisig With Rice", price: 65, stock: 20, category: "sisig", icon: "🍖" },
+                        { id: 5, name: "Chicken Sisig Without Rice", price: 55, stock: 12, category: "sisig", icon: "🍗" },
+                        { id: 6, name: "Chicken Sisig With Rice", price: 65, stock: 12, category: "sisig", icon: "🍗" },
+                        { id: 7, name: "Extra Rice", price: 15, stock: 50, category: "addons", icon: "🍚" },
+                        { id: 8, name: "Extra Egg", price: 15, stock: 40, category: "addons", icon: "🥚" },
+                        { id: 12, name: "Coke", price: 25, stock: 30, category: "drinks", icon: "🥤" },
+                        { id: 13, name: "Water - Small", price: 15, stock: 40, category: "drinks", icon: "💧" },
+                        { id: 14, name: "Water - Big", price: 25, stock: 30, category: "drinks", icon: "🍾" },
+                        { id: 15, name: "Mountain Dew", price: 25, stock: 25, category: "drinks", icon: "🥤" }
+                    ];
+                    for (let item of defaultMenu) {
+                        await window.setDocData(window.docRef("menu", String(item.id)), item);
+                    }
+                }
+
+                // SETUP REAL-TIME LISTENERS (`onSnapshot`) FOR LIVE MULTI-DEVICE SYNC
+                window.onSnapshotData(window.colRef("menu"), (snapshot) => {
+                    menuItems = [];
+                    snapshot.forEach(d => menuItems.push(d.data()));
+                    if (posWrapper.style.display === "flex") renderMenu();
+                    if (adminWrapper.style.display === "flex") renderInventoryTable();
+                });
+
+                window.onSnapshotData(window.colRef("accounts"), (snapshot) => {
+                    accounts = [];
+                    snapshot.forEach(d => accounts.push(d.data()));
+                    if (adminWrapper.style.display === "flex") renderUserAccountsTable();
+                });
+
+                window.onSnapshotData(window.colRef("sales"), (snapshot) => {
+                    salesHistory = [];
+                    snapshot.forEach(d => salesHistory.push(d.data()));
+                    if (adminWrapper.style.display === "flex") {
+                        updateSalesReport();
+                        renderSalesHistory();
+                    }
+                });
+
+                checkAutoRestoreSession();
+            } catch (err) {
+                console.error("Cloud connection error:", err);
             }
         }
 
-        // REAL-TIME CROSS-TAB SYNCHRONIZATION EVENT LISTENER
-        window.addEventListener("storage", function (e) {
-            accounts = JSON.parse(localStorage.getItem("sisig_accounts_v8")) || accounts;
-            userActivityLogs = JSON.parse(localStorage.getItem("sisig_logs_v8")) || userActivityLogs;
-            menuItems = JSON.parse(localStorage.getItem("sisig_menu_v8")) || menuItems;
-            takeoutFeeSetting = parseFloat(localStorage.getItem("sisig_takeout_fee_v8")) || takeoutFeeSetting;
-            salesHistory = JSON.parse(localStorage.getItem("sisig_sales_v8")) || salesHistory;
-            orderCounter = parseInt(localStorage.getItem("sisig_counter_v8")) || orderCounter;
+        // SAVE / UPDATE INDIVIDUAL DOCUMENTS IN FIRESTORE
+        async function saveAccountToCloud(acc) {
+            await window.setDocData(window.docRef("accounts", String(acc.id)), acc);
+        }
 
-            if (adminWrapper.style.display === "flex") {
-                renderUserAccountsTable();
-                renderUserLogsTable();
-                renderInventoryTable();
-                updateSalesReport();
-                renderSalesHistory();
-            } else if (posWrapper.style.display === "flex") {
-                renderMenu();
-                updateCartDisplay();
+        async function saveMenuToCloud(item) {
+            await window.setDocData(window.docRef("menu", String(item.id)), item);
+        }
+
+        async function deleteMenuFromCloud(id) {
+            await window.deleteDocData(window.docRef("menu", String(id)));
+        }
+
+        async function deleteAccountFromCloud(id) {
+            await window.deleteDocData(window.docRef("accounts", String(id)));
+        }
+
+        async function saveSaleToCloud(sale) {
+            await window.setDocData(window.docRef("sales", String(sale.orderNo)), sale);
+        }
+
+        async function clearSalesInCloud() {
+            const salesSnap = await window.getDocsData(window.colRef("sales"));
+            for (let d of salesSnap.docs) {
+                await window.deleteDocData(window.docRef("sales", d.id));
             }
-        });
+        }
 
         // AUTO RESTORE SESSION ON LOAD
-        window.addEventListener("DOMContentLoaded", () => {
+        function checkAutoRestoreSession() {
             if (currentUser) {
                 loginWrapper.style.display = "none";
                 if (currentUser.role === "admin") {
@@ -1763,7 +1803,7 @@
                     updateCartDisplay();
                 }
             }
-        });
+        }
 
         // SWITCH BETWEEN ADMIN DASHBOARD AND POS MODE
         function switchToPOS() {
@@ -1818,7 +1858,7 @@
             }
             currentUser = null;
             cart = [];
-            saveData();
+            localStorage.removeItem("sisig_current_user_v8");
             loginWrapper.style.display = "flex";
             posWrapper.style.display = "none";
             adminWrapper.style.display = "none";
@@ -1916,14 +1956,13 @@
             }
 
             currentUser = account;
+            localStorage.setItem("sisig_current_user_v8", JSON.stringify(currentUser));
 
             userActivityLogs.push({
                 username: account.username,
                 action: "LOGIN",
                 timestamp: new Date().toLocaleString()
             });
-
-            saveData();
 
             showMessage(`Welcome, ${account.username}! Redirecting...`, "success");
 
@@ -1953,7 +1992,7 @@
         });
 
         // SIGN UP PROCESS
-        signUpForm.addEventListener("submit", function (e) {
+        signUpForm.addEventListener("submit", async function (e) {
             e.preventDefault();
 
             const firstName = document.getElementById("signUpFirstName").value.trim();
@@ -1987,12 +2026,6 @@
                 return;
             }
 
-            const emailExists = accounts.some(acc => acc.email && acc.email.toLowerCase() === email.toLowerCase());
-            if (emailExists) {
-                showMessage("Email address is already registered.", "error");
-                return;
-            }
-
             const newAccount = {
                 id: Date.now(),
                 firstName,
@@ -2007,15 +2040,7 @@
                 status: "pending"
             };
 
-            accounts.push(newAccount);
-            try {
-                saveData();
-            } catch (error) {
-                accounts.pop();
-                console.error("Unable to save new account:", error);
-                showMessage("Could not save the account. Check browser storage.", "error");
-                return;
-            }
+            await saveAccountToCloud(newAccount);
 
             renderUserAccountsTable();
             clearSignUpForm();
@@ -2054,7 +2079,7 @@
             message.textContent = "";
         }
 
-        forgotPasswordForm.addEventListener("submit", function (e) {
+        forgotPasswordForm.addEventListener("submit", async function (e) {
             e.preventDefault();
 
             const usernameInput = document.getElementById("forgotUsername").value.trim();
@@ -2079,7 +2104,7 @@
             }
 
             account.password = newPasswordInput;
-            saveData();
+            await saveAccountToCloud(account);
 
             showMessage("Password successfully reset! Redirecting to login...", "success");
 
@@ -2089,7 +2114,7 @@
             }, 1800);
         });
 
-        // ADMIN USER & LOGS MANAGEMENT WITH COMPLETE SIGN UP DETAILS
+        // ADMIN USER & LOGS MANAGEMENT
         function renderUserAccountsTable() {
             const tbody = document.getElementById("userAccountsTableBody");
             tbody.innerHTML = "";
@@ -2135,7 +2160,7 @@
             document.getElementById("pendingBadge").textContent = pendingCount;
         }
 
-        function updateUserPassword(accId) {
+        async function updateUserPassword(accId) {
             const pwdInput = document.getElementById(`edit-pwd-${accId}`);
             const newPwd = pwdInput.value.trim();
 
@@ -2147,23 +2172,23 @@
             const acc = accounts.find(a => a.id === accId);
             if (acc) {
                 acc.password = newPwd;
-                saveData();
+                await saveAccountToCloud(acc);
                 alert(`Successfully updated password for user '${acc.username}'!`);
                 renderUserAccountsTable();
             }
         }
 
-        function approveUserAccount(accId) {
+        async function approveUserAccount(accId) {
             const acc = accounts.find(a => a.id === accId);
             if (acc) {
                 acc.status = "approved";
-                saveData();
+                await saveAccountToCloud(acc);
                 renderUserAccountsTable();
                 alert(`Account '${acc.username}' has been approved successfully!`);
             }
         }
 
-        function approveAllPendingUsers() {
+        async function approveAllPendingUsers() {
             const pendingUsers = accounts.filter(a => a.status === "pending");
             if (pendingUsers.length === 0) {
                 alert("No pending accounts to approve.");
@@ -2171,18 +2196,21 @@
             }
 
             if (confirm(`Approve all ${pendingUsers.length} pending user accounts?`)) {
-                accounts.forEach(a => { if (a.status === "pending") a.status = "approved"; });
-                saveData();
+                for (let a of accounts) {
+                    if (a.status === "pending") {
+                        a.status = "approved";
+                        await saveAccountToCloud(a);
+                    }
+                }
                 renderUserAccountsTable();
                 alert("All pending accounts approved!");
             }
         }
 
-        function deleteUserAccount(accId) {
+        async function deleteUserAccount(accId) {
             const acc = accounts.find(a => a.id === accId);
             if (acc && confirm(`Are you sure you want to delete user account '${acc.username}'?`)) {
-                accounts = accounts.filter(a => a.id !== accId);
-                saveData();
+                await deleteAccountFromCloud(acc.id);
                 renderUserAccountsTable();
             }
         }
@@ -2210,7 +2238,6 @@
         function clearLoginLogs() {
             if (confirm("Clear all user activity logs?")) {
                 userActivityLogs = [];
-                saveData();
                 renderUserLogsTable();
             }
         }
@@ -2325,7 +2352,7 @@
             qtyInput.value = val;
         }
 
-        function addSelectedQtyToCart(itemId) {
+        async function addSelectedQtyToCart(itemId) {
             const menuItem = menuItems.find(item => item.id === itemId);
             const qtyInput = document.getElementById(`qty-input-${itemId}`);
             const qtyToAdd = parseInt(qtyInput.value) || 1;
@@ -2336,6 +2363,7 @@
             }
 
             menuItem.stock -= qtyToAdd;
+            await saveMenuToCloud(menuItem);
 
             const existingItem = cart.find(item => item.id === itemId);
             if (existingItem) {
@@ -2348,7 +2376,7 @@
             updateCartDisplay();
         }
 
-        function updateQty(itemId, change) {
+        async function updateQty(itemId, change) {
             const menuItem = menuItems.find(item => item.id === itemId);
             const cartItem = cart.find(item => item.id === itemId);
 
@@ -2367,17 +2395,19 @@
                 }
             }
 
+            await saveMenuToCloud(menuItem);
             renderMenu();
             updateCartDisplay();
         }
 
-        function clearCart() {
-            cart.forEach(cartItem => {
+        async function clearCart() {
+            for (let cartItem of cart) {
                 const menuItem = menuItems.find(item => item.id === cartItem.id);
                 if (menuItem) {
                     menuItem.stock += cartItem.qty;
+                    await saveMenuToCloud(menuItem);
                 }
-            });
+            }
             cart = [];
             document.getElementById("cashInput").value = "";
             document.getElementById("refNoInput").value = "";
@@ -2461,7 +2491,7 @@
             }
         }
 
-        function finalizeOrder(cashVal, refNoVal) {
+        async function finalizeOrder(cashVal, refNoVal) {
             let subtotalSum = 0;
             cart.forEach(item => {
                 subtotalSum += item.price * item.qty;
@@ -2472,17 +2502,17 @@
             const currentOrderNum = `ORD-${orderCounter}`;
             orderCounter++;
 
-            salesHistory.push({
+            const newSale = {
                 orderNo: currentOrderNum,
-                date: new Date(),
+                date: new Date().toISOString(),
                 type: orderType.toUpperCase(),
                 payment: paymentMethod.toUpperCase(),
                 refNo: refNoVal,
                 items: [...cart],
                 total: totalCalc
-            });
+            };
 
-            saveData();
+            await saveSaleToCloud(newSale);
             buildReceiptModal(currentOrderNum, cashVal, refNoVal, subtotalSum, totalCalc);
         }
 
@@ -2565,7 +2595,7 @@
             document.getElementById("salesReportModal").style.display = "none";
         }
 
-        // ADMIN INVENTORY, PRICE, TAKE OUT FEE & ITEM MANAGEMENT WITH IMAGE UPLOAD
+        // ADMIN INVENTORY, PRICE, TAKE OUT FEE & ITEM MANAGEMENT
         function renderInventoryTable() {
             document.getElementById("adminTakeoutFeeInput").value = takeoutFeeSetting;
 
@@ -2626,7 +2656,6 @@
             }
 
             takeoutFeeSetting = newFee;
-            saveData();
             updateCartDisplay();
             alert(`Successfully updated Take Out Fee to ₱${takeoutFeeSetting.toFixed(2)}!`);
         }
@@ -2652,9 +2681,9 @@
 
             if (imageFile) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = async function(e) {
                     const base64Image = e.target.result;
-                    saveNewProductRecord(name, category, price, stock, base64Image);
+                    await saveNewProductRecord(name, category, price, stock, base64Image);
                 };
                 reader.readAsDataURL(imageFile);
             } else {
@@ -2662,19 +2691,18 @@
             }
         }
 
-        function saveNewProductRecord(name, category, price, stock, iconData) {
+        async function saveNewProductRecord(name, category, price, stock, iconData) {
             const newId = menuItems.length > 0 ? Math.max(...menuItems.map(i => i.id)) + 1 : 1;
-
-            menuItems.push({
+            const newItem = {
                 id: newId,
                 name: name,
                 price: price,
                 stock: stock,
                 category: category,
                 icon: iconData
-            });
+            };
 
-            saveData();
+            await saveMenuToCloud(newItem);
             renderInventoryTable();
             renderMenu();
 
@@ -2687,17 +2715,16 @@
             alert(`Successfully added new item '${name}' to the menu!`);
         }
 
-        function deleteMenuItem(itemId) {
+        async function deleteMenuItem(itemId) {
             const item = menuItems.find(i => i.id === itemId);
             if (item && confirm(`Are you sure you want to delete '${item.name}' from inventory?`)) {
-                menuItems = menuItems.filter(i => i.id !== itemId);
-                saveData();
+                await deleteMenuFromCloud(itemId);
                 renderInventoryTable();
                 renderMenu();
             }
         }
 
-        function updateItemPrice(itemId) {
+        async function updateItemPrice(itemId) {
             const priceInput = document.getElementById(`edit-price-${itemId}`);
             const newPrice = parseFloat(priceInput.value);
 
@@ -2709,18 +2736,18 @@
             const item = menuItems.find(i => i.id === itemId);
             if (item) {
                 item.price = newPrice;
-                saveData();
+                await saveMenuToCloud(item);
                 renderInventoryTable();
                 renderMenu();
                 alert(`Successfully updated the price of ${item.name} to ₱${newPrice.toFixed(2)}!`);
             }
         }
 
-        function saveAllInventoryChanges() {
+        async function saveAllInventoryChanges() {
             const priceInputs = document.querySelectorAll(".inventory-price-input");
             let updatedCount = 0;
 
-            priceInputs.forEach(input => {
+            for (let input of priceInputs) {
                 const itemId = parseInt(input.getAttribute("data-id"));
                 const newPrice = parseFloat(input.value);
 
@@ -2728,18 +2755,18 @@
                     const item = menuItems.find(i => i.id === itemId);
                     if (item) {
                         item.price = newPrice;
+                        await saveMenuToCloud(item);
                         updatedCount++;
                     }
                 }
-            });
+            }
 
-            saveData();
             renderInventoryTable();
             renderMenu();
             alert(`Successfully saved all changes for ${updatedCount} items!`);
         }
 
-        function adjustStock(itemId, actionType) {
+        async function adjustStock(itemId, actionType) {
             const input = document.getElementById(`adjust-stock-${itemId}`);
             const qtyVal = parseInt(input.value) || 0;
 
@@ -2761,7 +2788,7 @@
                     item.stock -= qtyVal;
                     alert(`Successfully deducted ${qtyVal} stocks from ${item.name}!`);
                 }
-                saveData();
+                await saveMenuToCloud(item);
                 renderInventoryTable();
                 renderMenu();
             }
@@ -2827,10 +2854,10 @@
             });
         }
 
-        function clearSalesHistory() {
+        async function clearSalesHistory() {
             if (confirm("Are you sure you want to clear all sales history?")) {
+                await clearSalesInCloud();
                 salesHistory = [];
-                saveData();
                 renderSalesHistory();
                 updateSalesReport();
             }
