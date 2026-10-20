@@ -1637,7 +1637,7 @@
         let salesHistory = [];
         let orderCounter = 1001;
 
-        let currentUser = JSON.parse(localStorage.getItem("sisig_current_user_v8")) || null;
+        let currentUser = null; 
         let cart = [];
         let orderType = "dine-in";
         let paymentMethod = "cash";
@@ -1646,6 +1646,9 @@
 
         async function initCloudData() {
             try {
+                localStorage.removeItem("sisig_current_user_v8");
+
+                // 1. Accounts setup
                 const accSnap = await window.getDocsData(window.colRef("accounts"));
                 if (accSnap.empty) {
                     const defaultAdmin = { 
@@ -1664,6 +1667,7 @@
                     await window.setDocData(window.docRef("accounts", "1"), defaultAdmin);
                 }
 
+                // 2. Menu setup
                 const menuSnap = await window.getDocsData(window.colRef("menu"));
                 if (menuSnap.empty) {
                     const defaultMenu = [
@@ -1685,7 +1689,13 @@
                     }
                 }
 
-                // REAL-TIME LISTENERS PARA SA MENU, ACCOUNTS, AT SALES (TWO-WAY SYNC)
+                // 3. Settings / Takeout Fee setup
+                const settingsSnap = await window.getDocsData(window.colRef("settings"));
+                if (settingsSnap.empty) {
+                    await window.setDocData(window.docRef("settings", "config"), { takeoutFee: 10 });
+                }
+
+                // REAL-TIME LISTENERS (TWO-WAY SYNC KASAMA ANG TAKEOUT FEE)
                 window.onSnapshotData(window.colRef("menu"), (snapshot) => {
                     menuItems = [];
                     snapshot.forEach(d => menuItems.push(d.data()));
@@ -1708,7 +1718,21 @@
                     }
                 });
 
-                checkAutoRestoreSession();
+                window.onSnapshotData(window.colRef("settings"), (snapshot) => {
+                    snapshot.forEach(d => {
+                        const data = d.data();
+                        if (data && typeof data.takeoutFee === 'number') {
+                            takeoutFeeSetting = data.takeoutFee;
+                            if (posWrapper.style.display === "flex") updateCartDisplay();
+                            if (adminWrapper.style.display === "flex") renderInventoryTable();
+                        }
+                    });
+                });
+
+                loginWrapper.style.display = "flex";
+                posWrapper.style.display = "none";
+                adminWrapper.style.display = "none";
+
             } catch (err) {
                 console.error("Cloud connection error:", err);
             }
@@ -1741,27 +1765,8 @@
             }
         }
 
-        function checkAutoRestoreSession() {
-            if (currentUser) {
-                loginWrapper.style.display = "none";
-                if (currentUser.role === "admin") {
-                    document.getElementById("adminUserDisplay").textContent = currentUser.username;
-                    document.getElementById("adminNavBtn").style.display = "inline-block";
-                    adminWrapper.style.display = "flex";
-                    showAdminSection('secApprovals', document.querySelectorAll('.admin-nav-btn')[0]);
-                    renderUserAccountsTable();
-                    renderUserLogsTable();
-                    renderInventoryTable();
-                    updateSalesReport();
-                    renderSalesHistory();
-                } else {
-                    document.getElementById("loggedInUserDisplay").textContent = currentUser.username;
-                    document.getElementById("adminNavBtn").style.display = "none";
-                    posWrapper.style.display = "flex";
-                    renderMenu();
-                    updateCartDisplay();
-                }
-            }
+        async function saveTakeoutFeeToCloud(fee) {
+            await window.setDocData(window.docRef("settings", "config"), { takeoutFee: fee });
         }
 
         function switchToPOS() {
@@ -2594,7 +2599,7 @@
             });
         }
 
-        function updateTakeoutFee() {
+        async function updateTakeoutFee() {
             const input = document.getElementById("adminTakeoutFeeInput");
             const newFee = parseFloat(input.value);
 
@@ -2603,9 +2608,8 @@
                 return;
             }
 
-            takeoutFeeSetting = newFee;
-            updateCartDisplay();
-            alert(`Successfully updated Take Out Fee to ₱${takeoutFeeSetting.toFixed(2)}!`);
+            await saveTakeoutFeeToCloud(newFee);
+            alert(`Successfully updated Take Out Fee to ₱${newFee.toFixed(2)}! Kusang mag-a-update ito sa cashier.`);
         }
 
         function addNewMenuItem() {
@@ -2718,7 +2722,7 @@
             const input = document.getElementById(`adjust-stock-${itemId}`);
             const qtyVal = parseInt(input.value) || 0;
 
-            if (qtyVal <= 0) {
+            if (qtyValue <= 0 && actionType !== 'add') { // handled below
                 alert("Please enter a valid quantity amount.");
                 return;
             }
