@@ -540,7 +540,7 @@
             align-items: center;
             justify-content: center;
             gap: 5px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             width: 100%;
         }
 
@@ -576,7 +576,6 @@
             font-weight: 800;
             font-size: 11px;
             cursor: pointer;
-            margin-top: 4px;
         }
 
         .cart-section {
@@ -2231,14 +2230,6 @@
                     <div class="stock-badge">Stock: ${item.stock}</div>
                     <div class="price">₱${item.price.toFixed(2)}</div>
                     
-                    <!-- Pangkasama/Pang-edit ng stock sa cashier interface -->
-                    <div style="font-size:11px; font-weight:700; color:var(--maroon); margin-bottom:2px;">Edit Stock:</div>
-                    <div class="add-stock-group" style="margin-bottom:6px;">
-                        <input type="number" id="cashier-adjust-${item.id}" class="add-stock-input" value="5" min="1" style="width:50px;">
-                        <button class="action-btn-sm btn-approve" onclick="cashierAdjustStock(${item.id}, 'add')">+</button>
-                        <button class="action-btn-sm btn-delete" onclick="cashierAdjustStock(${item.id}, 'minus')">-</button>
-                    </div>
-
                     <div class="order-qty-control">
                         <button class="order-qty-btn" onclick="changeOrderQty(${item.id}, -1)" ${isOutOfStock ? 'disabled' : ''}>-</button>
                         <input type="number" id="qty-input-${item.id}" class="order-qty-input" value="1" min="1" max="${item.stock}" ${isOutOfStock ? 'disabled' : ''} onchange="validateQtyInput(${item.id})">
@@ -2246,36 +2237,11 @@
                     </div>
 
                     <button class="add-cart-btn" onclick="addSelectedQtyToCart(${item.id})" ${isOutOfStock ? 'disabled' : ''}>
-                        ${isOutOfStock ? 'OUT OF STOCK' : 'ADD TO CART'}
+                        ${isOutOfStock ? 'OUT OF STOCK' : 'ADD'}
                     </button>
                 `;
                 menuGrid.appendChild(card);
             });
-        }
-
-        async function cashierAdjustStock(itemId, actionType) {
-            const input = document.getElementById(`cashier-adjust-${itemId}`);
-            const qtyVal = parseInt(input.value) || 0;
-
-            if (qtyVal <= 0) {
-                alert("Please enter a valid quantity amount.");
-                return;
-            }
-
-            const item = menuItems.find(i => i.id === itemId);
-            if (item) {
-                if (actionType === 'add') {
-                    item.stock += qtyVal;
-                } else if (actionType === 'minus') {
-                    if (item.stock - qtyVal < 0) {
-                        alert("Stock cannot go below zero!");
-                        return;
-                    }
-                    item.stock -= qtyVal;
-                }
-                await saveMenuToCloud(item);
-                renderMenu();
-            }
         }
 
         function filterCategory(category, btnElement) {
