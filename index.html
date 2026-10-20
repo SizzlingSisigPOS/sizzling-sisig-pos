@@ -2209,12 +2209,17 @@
                 return matchesCategory && matchesSearch;
             });
 
-            // Pag-uuri (Sorting): Sisig muna (magkakatabi), tapos Add-ons, at Drinks sa pinaka-huli
+            // Igrupo ang Sisig Muna, kasunod ang Add-ons, at huli ang Drinks
+            const categoryOrder = { 'sisig': 1, 'addons': 2, 'drinks': 3 };
+
             itemsToDisplay.sort((a, b) => {
-                const order = { 'sisig': 1, 'addons': 2, 'drinks': 3 };
-                const orderA = order[a.category] || 4;
-                const orderB = order[b.category] || 4;
-                return orderA - orderB;
+                const orderA = categoryOrder[a.category] || 99;
+                const orderB = categoryOrder[b.category] || 99;
+
+                if (orderA !== orderB) {
+                    return orderA - orderB;
+                }
+                return a.id - b.id;
             });
 
             if (itemsToDisplay.length === 0) {
