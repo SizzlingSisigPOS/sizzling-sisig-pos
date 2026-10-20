@@ -1,0 +1,2840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sizzling Sisig POS & Admin System</title>
+
+    <style>
+        :root {
+            --maroon: #781d2b;
+            --dark-maroon: #50121e;
+            --red: #c52d32;
+            --orange: #f28c28;
+            --gold: #f5b83d;
+            --cream: #fffaf0;
+            --text: #351b20;
+            --muted: #806a6c;
+            --white: #ffffff;
+            --gray-bg: #f8f9fa;
+            --border: #e2d5d7;
+            --success: #206b38;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: radial-gradient(circle at top left, #fce4d5, transparent 40%),
+                        linear-gradient(135deg, #f7eeee, #f4dfe1);
+            color: var(--text);
+        }
+
+        /* --- LOGIN, SIGNUP & FORGOT PASSWORD STYLES --- */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 1050px;
+            min-height: 600px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            overflow: hidden;
+            border-radius: 22px;
+            background: var(--white);
+            box-shadow: 0 20px 55px rgba(80, 18, 30, 0.18);
+        }
+
+        .branding-panel {
+            background: linear-gradient(150deg, #fff5ee, #f8e3e5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 42px 30px;
+            text-align: center;
+        }
+
+        .logo-container {
+            width: 160px;
+            max-width: 100%;
+            aspect-ratio: 1 / 1;
+            margin-bottom: 18px;
+        }
+
+        .logo-container svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            filter: drop-shadow(0 7px 7px rgba(80, 18, 30, 0.12));
+        }
+
+        .store-name {
+            color: var(--maroon);
+            font-size: 32px;
+            line-height: 1.08;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .store-subtitle {
+            margin-top: 8px;
+            color: var(--dark-maroon);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+
+        .divider {
+            width: 76px;
+            height: 4px;
+            margin: 18px auto;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--red), var(--orange), var(--gold));
+        }
+
+        .description {
+            max-width: 290px;
+            color: #74595c;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .tagline {
+            margin-top: 14px;
+            color: var(--red);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+        }
+
+        .login-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 35px 40px;
+            background: #ffffff;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .login-heading {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--maroon);
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .login-subheading {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fffdfd;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(197, 45, 50, 0.10);
+        }
+
+        .input-icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            background-color: #f9ecee;
+            border-right: 1px solid var(--border);
+            font-size: 15px;
+        }
+
+        .input-wrapper input, .input-wrapper select {
+            width: 100%;
+            height: 42px;
+            padding: 0 12px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .password-toggle {
+            padding: 0 12px;
+            border: none;
+            background: transparent;
+            color: #89676d;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            min-height: 42px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-button {
+            border: none;
+            background: linear-gradient(135deg, var(--maroon), var(--red));
+            color: white;
+            box-shadow: 0 7px 15px rgba(120, 29, 43, 0.18);
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .clear-button {
+            border: 1px solid var(--maroon);
+            background: white;
+            color: var(--maroon);
+        }
+
+        .signup-toggle-box {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #f2e6e8;
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .signup-toggle-link {
+            color: var(--maroon);
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 5px;
+        }
+
+        .signup-toggle-link:hover {
+            color: var(--red);
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            font-size: 12px;
+            color: var(--maroon);
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: -6px;
+            margin-bottom: 12px;
+            text-decoration: underline;
+        }
+
+        .message {
+            display: none;
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .message.error {
+            display: block;
+            border: 1px solid #f0c5c8;
+            background: #fff0f1;
+            color: #a51e2b;
+        }
+
+        .message.success {
+            display: block;
+            border: 1px solid #b7dfc2;
+            background: #effaf2;
+            color: #206b38;
+        }
+
+        /* --- CASHIER / USER POS INTERFACE --- */
+        .pos-wrapper {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+            background: #f4dfe1;
+        }
+
+        .pos-header {
+            background: var(--dark-maroon);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .pos-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: var(--gold);
+        }
+
+        .pos-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .header-action-btn {
+            background: var(--gold);
+            color: var(--dark-maroon);
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 12px;
+            transition: opacity 0.2s;
+        }
+
+        .logout-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 12px;
+        }
+
+        .logout-btn:hover {
+            background: #a51e2b;
+        }
+
+        .pos-main {
+            display: grid;
+            grid-template-columns: 1fr 430px;
+            flex: 1;
+            overflow: hidden;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .menu-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .menu-top-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+
+        .cat-btn {
+            background: #f8ecee;
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            color: var(--maroon);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: var(--maroon);
+            color: white;
+            border-color: var(--maroon);
+        }
+
+        .search-input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-width: 220px;
+        }
+
+        .search-input-box input {
+            width: 100%;
+            height: 38px;
+            padding: 0 12px 0 35px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            outline: none;
+            font-size: 13px;
+            background: #fffdfd;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .menu-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(120, 29, 43, 0.12);
+            border-color: var(--orange);
+        }
+
+        .menu-card.out-of-stock {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .menu-card .icon-box {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff5ee;
+            border-radius: 50%;
+            border: 2px solid #f4dfe1;
+            font-size: 28px;
+            overflow: hidden;
+        }
+
+        .menu-card .icon-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .menu-card .title {
+            font-weight: 800;
+            color: var(--text);
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .menu-card .stock-badge {
+            font-size: 10px;
+            background: #fdf2f2;
+            color: var(--red);
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .menu-card .price {
+            color: var(--maroon);
+            font-weight: 800;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .order-qty-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+
+        .order-qty-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            border: 1px solid var(--maroon);
+            background: #f9ecee;
+            color: var(--maroon);
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .order-qty-input {
+            width: 40px;
+            height: 26px;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-weight: 700;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .add-cart-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--maroon), var(--red));
+            color: white;
+            border: none;
+            padding: 7px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .cart-section {
+            background: white;
+            border-radius: 15px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .cart-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--maroon);
+            margin-bottom: 12px;
+            border-bottom: 2px solid #f8ecee;
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .order-type-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            background: #fcf6f7;
+            padding: 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .order-type-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .order-type-btn.active {
+            background: var(--maroon);
+            color: white;
+        }
+
+        .payment-method-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--maroon);
+            margin: 6px 0 4px;
+        }
+
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .pay-method-btn {
+            padding: 8px 4px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fffdfd;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .pay-method-btn.active {
+            background: var(--red);
+            color: white;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f2e6e8;
+        }
+
+        .cart-item-info { flex: 1; }
+        .cart-item-title { font-weight: 700; font-size: 13px; }
+        .cart-item-price { font-size: 11px; color: var(--muted); }
+
+        .qty-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid var(--maroon);
+            background: white;
+            color: var(--maroon);
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .cart-summary {
+            background: #fcf6f7;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .summary-row.total {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--maroon);
+            border-top: 1px dashed var(--border);
+            padding-top: 6px;
+        }
+
+        .payment-box {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .payment-box input {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            font-size: 13px;
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, var(--maroon), var(--red));
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        /* --- ADMIN DASHBOARD INTERFACE --- */
+        .admin-wrapper {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+            background: #f4dfe1;
+        }
+
+        .admin-nav-bar {
+            background: #ffffff;
+            padding: 12px 24px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .admin-nav-btn {
+            background: #fcf6f7;
+            border: 1px solid var(--border);
+            color: var(--maroon);
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .admin-nav-btn.active, .admin-nav-btn:hover {
+            background: var(--maroon);
+            color: white;
+            border-color: var(--maroon);
+        }
+
+        .badge-count {
+            background: var(--red);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 4px;
+        }
+
+        .admin-main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-section {
+            display: none;
+            width: 100%;
+        }
+
+        .admin-section.active-view {
+            display: block;
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 15px;
+            padding: 22px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-card-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--maroon);
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f8ecee;
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .title-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 480px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .data-table th {
+            background: #fcf6f7;
+            color: var(--maroon);
+            font-weight: 800;
+            position: sticky;
+            top: 0;
+        }
+
+        .action-btn-sm {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 11px;
+            cursor: pointer;
+            margin-left: 2px;
+        }
+
+        .btn-approve { background: var(--success); color: white; }
+        .btn-delete { background: var(--red); color: white; }
+        .btn-clear { background: var(--muted); color: white; }
+        .btn-print-report { background: var(--maroon); color: white; padding: 10px 16px; font-size: 13px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .status-approved { background: #effaf2; color: var(--success); border: 1px solid #b7dfc2; }
+        .status-pending { background: #fff8e6; color: var(--orange); border: 1px solid #ffe0b2; }
+
+        .add-stock-group { display: flex; gap: 4px; align-items: center; }
+        .add-stock-input, .edit-price-input {
+            width: 75px;
+            padding: 5px 6px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* CONFIG TAKE OUT FEE */
+        .config-box {
+            background: #fcf6f7;
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* ADD ITEM FORM STYLES IN INVENTORY */
+        .add-item-box {
+            background: #fcf6f7;
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1.2fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .add-item-box input, .add-item-box select {
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            outline: none;
+            background: white;
+        }
+
+        .report-filters { display: flex; gap: 8px; margin-bottom: 20px; }
+        .report-tab {
+            padding: 8px 18px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: #f8ecee;
+            color: var(--maroon);
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .report-tab.active { background: var(--maroon); color: white; }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .metric-box {
+            background: #fcf6f7;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .metric-label { font-size: 14px; color: var(--muted); font-weight: 700; }
+        .metric-value { font-size: 28px; font-weight: 900; color: var(--maroon); margin-top: 5px; }
+
+        /* --- RECEIPT MODAL --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 380px;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .receipt-container {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            color: #000;
+            background: #fffaf0;
+            padding: 15px;
+            border: 1px dashed #781d2b;
+            border-radius: 6px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 8px;
+        }
+
+        .receipt-header h3 { font-size: 16px; font-weight: 900; color: var(--maroon); }
+
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        .receipt-table th, .receipt-table td { text-align: left; padding: 3px 0; }
+        .receipt-table td.right, .receipt-table th.right { text-align: right; }
+        .receipt-divider { border-top: 1px dashed #000; margin: 8px 0; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+
+        .receipt-footer {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #555;
+            border-top: 1px dashed #000;
+            padding-top: 8px;
+        }
+
+        .modal-buttons { display: flex; gap: 10px; }
+        .modal-btn {
+            flex: 1; padding: 10px; border-radius: 6px;
+            font-weight: 800; font-size: 13px; cursor: pointer; border: none;
+        }
+
+        .print-btn { background: var(--maroon); color: white; }
+        .close-btn { background: #e2d5d7; color: var(--text); }
+
+        @media print {
+            body * { visibility: hidden; }
+            #receiptPrintArea, #receiptPrintArea *, #salesReportPrintArea, #salesReportPrintArea * { visibility: visible; }
+            #receiptPrintArea, #salesReportPrintArea { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= LOGIN / SIGN UP / FORGOT PASSWORD SCREEN ================= -->
+    <div id="loginWrapper" class="login-wrapper">
+        <main class="login-container">
+            <!-- BRANDING PANEL -->
+            <section class="branding-panel">
+                <div class="logo-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" role="img">
+                        <defs>
+                            <linearGradient id="flameRed" x1="0" y1="1" x2="0" y2="0">
+                                <stop offset="0%" stop-color="#c52d32"/>
+                                <stop offset="100%" stop-color="#f45b35"/>
+                            </linearGradient>
+                            <linearGradient id="flameGold" x1="0" y1="1" x2="0" y2="0">
+                                <stop offset="0%" stop-color="#f28c28"/>
+                                <stop offset="100%" stop-color="#ffd15c"/>
+                            </linearGradient>
+                            <linearGradient id="panGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#414141"/>
+                                <stop offset="100%" stop-color="#171717"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="150" cy="150" r="140" fill="#fffaf0"/>
+                        <circle cx="150" cy="150" r="135" fill="none" stroke="#781d2b" stroke-width="7"/>
+                        <circle cx="150" cy="150" r="125" fill="none" stroke="#e7ad42" stroke-width="2"/>
+                        <path d="M65 98 Q54 86 65 74" fill="none" stroke="#f28c28" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M235 98 Q246 86 235 74" fill="none" stroke="#f28c28" stroke-width="5" stroke-linecap="round"/>
+                        <path transform="translate(-25,-15) scale(1.12)" d="M96 145 C76 125 93 103 106 89 C104 111 126 114 122 137 C120 151 108 160 96 145Z" fill="url(#flameRed)"/>
+                        <path transform="translate(-35,-18) scale(1.15)" d="M143 139 C116 112 143 83 155 54 C159 82 185 98 179 123 C176 144 159 156 143 139Z" fill="url(#flameRed)"/>
+                        <path transform="translate(-26,-18) scale(1.08)" d="M151 135 C139 118 157 100 158 88 C171 107 172 123 163 136 C160 141 155 141 151 135Z" fill="url(#flameGold)"/>
+                        <path transform="translate(-32,-18) scale(1.12)" d="M193 145 C177 125 195 106 208 91 C205 113 228 120 220 141 C216 154 203 160 193 145Z" fill="url(#flameRed)"/>
+                        <path d="M196 174 L239 188 Q249 192 244 201 Q241 207 232 203 L188 190Z" fill="#292929" stroke="#111111" stroke-width="3"/>
+                        <path d="M65 158 Q150 177 219 158 L208 188 Q201 204 183 204 L101 204 Q82 204 76 188Z" fill="url(#panGradient)" stroke="#111111" stroke-width="4"/>
+                        <ellipse cx="143" cy="159" rx="79" ry="17" fill="#2d2d2d" stroke="#111111" stroke-width="4"/>
+                        <ellipse cx="143" cy="157" rx="68" ry="10" fill="#f5b83d"/>
+                        <ellipse cx="143" cy="155" rx="59" ry="7" fill="#c52d32"/>
+                        <path d="M32 211 L268 211 L256 250 L44 250Z" fill="#781d2b" stroke="#50121e" stroke-width="2"/>
+                        <text x="150" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="27" font-weight="900" fill="#fffaf0">SIZZLING</text>
+                        <text x="150" y="269" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="900" letter-spacing="5" fill="#781d2b">SISIG</text>
+                    </svg>
+                </div>
+                <h1 class="store-name">Sizzling<br>Sisig</h1>
+                <p class="store-subtitle">HOT • FRESH • DELICIOUS</p>
+                <div class="divider"></div>
+                <p class="description">Welcome to Sizzling Sisig!<br>Manage sales and inventory easily.</p>
+                <p class="tagline">Pure heat, pure eat</p>
+            </section>
+
+            <!-- FORM PANEL -->
+            <section class="login-panel">
+                <!-- LOGIN FORM -->
+                <div id="loginFormSection">
+                    <h2 class="login-heading">User Login</h2>
+                    <p class="login-subheading">Please log in to access your dashboard.</p>
+
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">👤</div>
+                                <input type="text" id="loginUsername" placeholder="Enter username" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">🔒</div>
+                                <input type="password" id="loginPassword" placeholder="Enter password" required>
+                                <button type="button" id="toggleLoginPassword" class="password-toggle">👁️</button>
+                            </div>
+                        </div>
+
+                        <span class="forgot-link" onclick="toggleAuthMode('forgot')">Forgot Password?</span>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn login-button">LOGIN</button>
+                            <button type="button" class="btn clear-button" onclick="clearLoginForm()">CLEAR</button>
+                        </div>
+                    </form>
+
+                    <div class="signup-toggle-box">
+                        Don't have an account? <span class="signup-toggle-link" onclick="toggleAuthMode('signup')">Sign Up</span>
+                    </div>
+                </div>
+
+                <!-- SIGN UP FORM (FOR CASHIERS) WITH SECURITY QUESTIONS -->
+                <div id="signUpFormSection" style="display: none;">
+                    <h2 class="login-heading">Create Cashier Account</h2>
+                    <p class="login-subheading">Sign up requires Admin Approval before logging in.</p>
+
+                    <form id="signUpForm">
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">👤</div>
+                                <input type="text" id="signUpFirstName" placeholder="First Name" autocomplete="given-name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">👤</div>
+                                <input type="text" id="signUpLastName" placeholder="Last Name" autocomplete="family-name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">✉️</div>
+                                <input type="email" id="signUpEmail" placeholder="Email Address" autocomplete="email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">📱</div>
+                                <input type="tel" id="signUpPhone" placeholder="Phone Number" autocomplete="tel" pattern="[0-9+\-\s()]{7,20}" title="Enter a valid phone number." required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">❓</div>
+                                <select id="signUpSecurityQuestion" required>
+                                    <option value="" disabled selected>Select Security Question</option>
+                                    <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                                    <option value="What was the name of your first pet?">What was the name of your first pet?</option>
+                                    <option value="What is your favorite elementary school teacher's name?">What is your favorite elementary school teacher's name?</option>
+                                    <option value="In what city were you born?">In what city were you born?</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">💡</div>
+                                <input type="text" id="signUpSecurityAnswer" placeholder="Security Answer" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">👤</div>
+                                <input type="text" id="signUpUsername" placeholder="Create Username" minlength="3" autocomplete="username" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">🔒</div>
+                                <input type="password" id="signUpPassword" placeholder="Create Password" required>
+                                <button type="button" id="toggleSignUpPassword" class="password-toggle">👁️</button>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn login-button">SIGN UP</button>
+                            <button type="button" class="btn clear-button" onclick="clearSignUpForm()">CLEAR</button>
+                        </div>
+                    </form>
+
+                    <div class="signup-toggle-box">
+                        Already have an account? <span class="signup-toggle-link" onclick="toggleAuthMode('login')">Log In</span>
+                    </div>
+                </div>
+
+                <!-- FORGOT PASSWORD FORM -->
+                <div id="forgotPasswordSection" style="display: none;">
+                    <h2 class="login-heading">Forgot Password</h2>
+                    <p class="login-subheading">Verify your Security Question to reset password.</p>
+
+                    <form id="forgotPasswordForm">
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">👤</div>
+                                <input type="text" id="forgotUsername" placeholder="Enter your Username" required onchange="loadUserSecurityQuestion()">
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="forgotQuestionBox" style="display: none;">
+                            <p style="font-size: 12px; font-weight: 700; color: var(--maroon); margin-bottom: 4px;" id="displayForgotQuestion"></p>
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">💡</div>
+                                <input type="text" id="forgotAnswer" placeholder="Your Security Answer" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="forgotNewPasswordBox" style="display: none;">
+                            <div class="input-wrapper">
+                                <div class="input-icon-box">🔑</div>
+                                <input type="password" id="forgotNewPassword" placeholder="Enter New Password" required>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" id="forgotCheckBtn" class="btn login-button" onclick="loadUserSecurityQuestion()">FIND USER</button>
+                            <button type="submit" id="forgotResetBtn" class="btn login-button" style="display: none;">RESET PASSWORD</button>
+                        </div>
+                    </form>
+
+                    <div class="signup-toggle-box">
+                        Remembered your password? <span class="signup-toggle-link" onclick="toggleAuthMode('login')">Log In</span>
+                    </div>
+                </div>
+
+                <div id="message" class="message" role="status"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ================= CASHIER / USER POS SYSTEM ================= -->
+    <div id="posWrapper" class="pos-wrapper">
+        <header class="pos-header">
+            <div class="brand">
+                <span>🔥</span> SIZZLING SISIG POS
+            </div>
+            <div class="user-info">
+                <span>Cashier: <strong id="loggedInUserDisplay">User</strong> (<span style="color: var(--gold); font-weight: bold;">CASHIER</span>)</span>
+                <button id="adminNavBtn" class="header-action-btn" onclick="switchToAdmin()" style="display: none;">⚙️ Admin Dashboard</button>
+                <button class="logout-btn" onclick="logoutSystem()">Logout</button>
+            </div>
+        </header>
+
+        <div class="pos-main">
+            <!-- LEFT: MENU ITEMS -->
+            <section class="menu-section">
+                <div class="menu-top-toolbar">
+                    <div class="category-tabs">
+                        <button class="cat-btn active" onclick="filterCategory('all', this)">All Menu</button>
+                        <button class="cat-btn" onclick="filterCategory('sisig', this)">Sisig Meals</button>
+                        <button class="cat-btn" onclick="filterCategory('addons', this)">Add-Ons</button>
+                        <button class="cat-btn" onclick="filterCategory('drinks', this)">Drinks</button>
+                    </div>
+
+                    <div class="search-input-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search menu items..." oninput="handleSearch()">
+                    </div>
+                </div>
+
+                <div class="menu-grid" id="menuGrid">
+                    <!-- Dynamic Menu Items -->
+                </div>
+            </section>
+
+            <!-- RIGHT: ORDER CART -->
+            <section class="cart-section">
+                <div class="cart-title">
+                    <span>Current Order</span>
+                    <button class="text-button" onclick="clearCart()">Clear All</button>
+                </div>
+
+                <div class="order-type-box">
+                    <button id="btnDineIn" class="order-type-btn active" onclick="setOrderType('dine-in')">Dine In</button>
+                    <button id="btnTakeOut" class="order-type-btn" onclick="setOrderType('take-out')">Take Out (<span id="takeoutLabelDisplay">₱10</span>)</button>
+                </div>
+
+                <div class="payment-method-title">Select Payment Method:</div>
+                <div class="payment-methods-grid">
+                    <button id="payCash" class="pay-method-btn active" onclick="setPaymentMethod('cash')">💵 Cash</button>
+                    <button id="payGCash" class="pay-method-btn" onclick="setPaymentMethod('gcash')">📱 GCash</button>
+                    <button id="payBank" class="pay-method-btn" onclick="setPaymentMethod('bank')">🏦 Bank</button>
+                </div>
+
+                <div class="cart-items" id="cartItems">
+                    <!-- Selected Items -->
+                </div>
+
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotalAmount">₱0.00</span>
+                    </div>
+                    <div class="summary-row" id="takeoutFeeRow" style="display: none; color: var(--red);">
+                        <span>Take Out Fee:</span>
+                        <span id="takeoutFeeAmount">₱10.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>TOTAL:</span>
+                        <span id="totalAmount">₱0.00</span>
+                    </div>
+
+                    <div class="payment-box">
+                        <div id="cashInputGroup">
+                            <input type="number" id="cashInput" placeholder="Cash Rendered (₱)" oninput="calculateChange()">
+                            <div class="summary-row" style="margin-top: 5px;">
+                                <span>Change:</span>
+                                <strong id="changeAmount" style="color: var(--maroon);">₱0.00</strong>
+                            </div>
+                        </div>
+
+                        <div id="refInputGroup" style="display: none;">
+                            <input type="text" id="refNoInput" placeholder="Reference / Ref No. (Req.)">
+                            <small style="font-size: 10px; color: var(--muted); margin-top: 2px;">Enter Reference Number</small>
+                        </div>
+                    </div>
+
+                    <button class="checkout-btn" onclick="processPayment()">PAY & PROCESS ORDER</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ================= ADMIN DASHBOARD INTERFACE ================= -->
+    <div id="adminWrapper" class="admin-wrapper">
+        <header class="pos-header">
+            <div class="brand">
+                <span>🛡️</span> SIZZLING SISIG ADMIN DASHBOARD
+            </div>
+            <div class="user-info">
+                <span>Admin: <strong id="adminUserDisplay">Admin</strong></span>
+                <button class="header-action-btn" onclick="switchToPOS()">🛒 Open POS Mode</button>
+                <button class="logout-btn" onclick="logoutSystem()">Logout</button>
+            </div>
+        </header>
+
+        <!-- 5 INTERFACE NAVIGATION BUTTONS -->
+        <nav class="admin-nav-bar">
+            <button class="admin-nav-btn active" onclick="showAdminSection('secApprovals', this)">
+                👥 User Approvals <span class="badge-count" id="pendingBadge">0</span>
+            </button>
+            <button class="admin-nav-btn" onclick="showAdminSection('secLogs', this)">
+                🕒 Activity Logs
+            </button>
+            <button class="admin-nav-btn" onclick="showAdminSection('secInventory', this)">
+                📦 Inventory Management
+            </button>
+            <button class="admin-nav-btn" onclick="showAdminSection('secReports', this)">
+                📈 Sales Reports
+            </button>
+            <button class="admin-nav-btn" onclick="showAdminSection('secSalesHistory', this)">
+                📋 Complete Sales History
+            </button>
+        </nav>
+
+        <div class="admin-main">
+            <!-- 1. USER APPROVALS SECTION -->
+            <section id="secApprovals" class="admin-section active-view">
+                <div class="admin-card">
+                    <div class="admin-card-title">
+                        <span>👥 User Account Approvals & Password Management</span>
+                        <div class="title-actions">
+                            <button class="action-btn-sm btn-approve" onclick="approveAllPendingUsers()">Approve All Pending</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Contact Info</th>
+                                    <th>Security Q&A</th>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Change Password</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userAccountsTableBody">
+                                <!-- Dynamic User Accounts -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. ACTIVITY LOGS SECTION -->
+            <section id="secLogs" class="admin-section">
+                <div class="admin-card">
+                    <div class="admin-card-title">
+                        <span>🕒 Cashier Login & Logout Activity Logs</span>
+                        <div class="title-actions">
+                            <button class="action-btn-sm btn-clear" onclick="clearLoginLogs()">Clear Activity Logs</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Action</th>
+                                    <th>Date & Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userLogsTableBody">
+                                <!-- Dynamic Logs -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. INVENTORY MANAGEMENT SECTION -->
+            <section id="secInventory" class="admin-section">
+                <div class="admin-card">
+                    <div class="admin-card-title">
+                        <span>📦 Inventory & Menu Item Management</span>
+                        <div class="title-actions">
+                            <button class="action-btn-sm btn-approve" onclick="saveAllInventoryChanges()" style="padding: 8px 14px; font-size: 12px;">💾 Save All Changes</button>
+                            <div class="search-input-box" style="width: 220px;">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="inventorySearchInput" placeholder="Search inventory..." oninput="renderInventoryTable()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONFIG TAKE OUT FEE -->
+                    <div class="config-box">
+                        <div>
+                            <strong>Take Out Fee Configuration</strong>
+                            <p style="font-size: 12px; color: var(--muted);">Set the default fee added to take-out orders.</p>
+                        </div>
+                        <div class="add-stock-group">
+                            <input type="number" id="adminTakeoutFeeInput" class="edit-price-input" value="10" min="0" step="any">
+                            <button class="action-btn-sm btn-approve" onclick="updateTakeoutFee()">Save Fee</button>
+                        </div>
+                    </div>
+
+                    <!-- ADD ITEM FORM (WITH EMOJI OR PICTURE UPLOAD) -->
+                    <div class="add-item-box">
+                        <input type="text" id="newItemName" placeholder="Item Name (e.g. Bangus Sisig)">
+                        <select id="newItemCategory">
+                            <option value="sisig">Sisig Meals</option>
+                            <option value="addons">Add-Ons</option>
+                            <option value="drinks">Drinks</option>
+                        </select>
+                        <input type="number" id="newItemPrice" placeholder="Price (₱)" min="1">
+                        <input type="number" id="newItemStock" placeholder="Stock Qty" min="1">
+                        <input type="text" id="newItemIcon" placeholder="Emoji (e.g. 🐟)" value="🔥">
+                        <input type="file" id="newItemImageFile" accept="image/*" style="font-size:11px;">
+                        <button class="action-btn-sm btn-approve" onclick="addNewMenuItem()" style="padding: 10px 14px;">+ Add Product</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Image / Icon</th>
+                                    <th>Item Name</th>
+                                    <th>Category</th>
+                                    <th>Price (₱)</th>
+                                    <th>Current Stock</th>
+                                    <th>Edit Stock (±)</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                <!-- Dynamic Inventory Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. SALES SUMMARY REPORTS SECTION -->
+            <section id="secReports" class="admin-section">
+                <div class="admin-card">
+                    <div class="admin-card-title">
+                        <span>📈 Sales Summary Reports</span>
+                        <button class="btn-print-report" onclick="openSalesReportModal()">🖨️ PRINT SALES REPORT RECEIPT</button>
+                    </div>
+                    
+                    <div class="report-filters">
+                        <button class="report-tab active" onclick="setReportFilter('day', this)">Day</button>
+                        <button class="report-tab" onclick="setReportFilter('week', this)">Week</button>
+                        <button class="report-tab" onclick="setReportFilter('month', this)">Month</button>
+                        <button class="report-tab" onclick="setReportFilter('year', this)">Year</button>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-box">
+                            <div class="metric-label" id="reportPeriodLabel">Total Sales (Today)</div>
+                            <div class="metric-value" id="reportTotalSales">₱0.00</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-label">Total Transactions</div>
+                            <div class="metric-value" id="reportTotalCount">0</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. COMPLETE SALES HISTORY SECTION -->
+            <section id="secSalesHistory" class="admin-section">
+                <div class="admin-card">
+                    <div class="admin-card-title">
+                        <span>📋 Complete Sales History Logs</span>
+                        <div class="title-actions">
+                            <button class="action-btn-sm btn-clear" onclick="clearSalesHistory()">Clear Sales History</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Order No.</th>
+                                    <th>Date & Time</th>
+                                    <th>Type</th>
+                                    <th>Payment</th>
+                                    <th>Reference No.</th>
+                                    <th>Items Ordered</th>
+                                    <th style="text-align: right;">Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesHistoryTableBody">
+                                <!-- Dynamic Sales History -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ================= TRANSACTION RECEIPT MODAL ================= -->
+    <div id="receiptModal" class="modal-overlay">
+        <div class="modal-card">
+            <div id="receiptPrintArea" class="receipt-container">
+                <div class="receipt-header">
+                    <h3>SIZZLING SISIG</h3>
+                    <p>Hot • Fresh • Delicious</p>
+                    <p id="receiptOrderNum" style="font-weight: 900; color: var(--maroon); margin-top: 5px; font-size: 14px;"></p>
+                    <p id="receiptOrderType" style="font-weight: bold; margin-top: 2px; font-size: 12px;">[ DINE IN ]</p>
+                    <p style="font-size: 10px; margin-top: 4px;" id="receiptDateTime"></p>
+                </div>
+
+                <table class="receipt-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th class="right">Qty</th>
+                            <th class="right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receiptTableBody"></tbody>
+                </table>
+
+                <div class="receipt-divider"></div>
+
+                <div class="receipt-row">
+                    <span>Subtotal:</span>
+                    <span id="rcpSubtotal">₱0.00</span>
+                </div>
+                <div class="receipt-row" id="rcpTakeoutRow" style="display:none;">
+                    <span>Take Out Fee:</span>
+                    <span id="rcpTakeoutFeeVal">₱10.00</span>
+                </div>
+                <div class="receipt-row" style="font-weight: bold; font-size: 13px; margin-top: 4px;">
+                    <span>TOTAL:</span>
+                    <span id="rcpTotal">₱0.00</span>
+                </div>
+
+                <div class="receipt-divider"></div>
+
+                <div class="receipt-row">
+                    <span>Payment Method:</span>
+                    <strong id="rcpPayMethod">CASH</strong>
+                </div>
+                <div class="receipt-row" id="rcpRefRow" style="display:none;">
+                    <span>Ref No:</span>
+                    <span id="rcpRefNo">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Amount Paid:</span>
+                    <span id="rcpCash">₱0.00</span>
+                </div>
+                <div class="receipt-row" id="rcpChangeRow">
+                    <span>Change:</span>
+                    <span id="rcpChange">₱0.00</span>
+                </div>
+
+                <div class="receipt-footer">
+                    <p>Thank you for eating with us!</p>
+                    <p>Please come again 🔥</p>
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="modal-btn print-btn" onclick="printReceipt()">🖨️ PRINT RECEIPT</button>
+                <button class="modal-btn close-btn" onclick="closeReceiptModal()">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SALES REPORT RECEIPT MODAL ================= -->
+    <div id="salesReportModal" class="modal-overlay">
+        <div class="modal-card">
+            <div id="salesReportPrintArea" class="receipt-container">
+                <div class="receipt-header">
+                    <h3>SIZZLING SISIG</h3>
+                    <p style="font-weight: 800; text-transform: uppercase;">SALES SUMMARY REPORT</p>
+                    <p style="font-size: 10px; margin-top: 4px;" id="srpReportDate"></p>
+                </div>
+
+                <div class="receipt-row">
+                    <span>Report Period:</span>
+                    <strong id="srpPeriod" style="text-transform: uppercase; color: var(--maroon);">DAY</strong>
+                </div>
+                <div class="receipt-row">
+                    <span>Total Transactions:</span>
+                    <strong id="srpTxCount">0</strong>
+                </div>
+
+                <div class="receipt-divider"></div>
+
+                <div class="receipt-row" style="font-size: 14px; font-weight: 900; margin: 8px 0;">
+                    <span>TOTAL SALES:</span>
+                    <span id="srpTotalSalesAmount" style="color: var(--maroon);">₱0.00</span>
+                </div>
+
+                <div class="receipt-divider"></div>
+
+                <div class="receipt-footer">
+                    <p>Generated by Admin System</p>
+                    <p>Sizzling Sisig Management System</p>
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="modal-btn print-btn" onclick="printSalesReport()">🖨️ PRINT REPORT</button>
+                <button class="modal-btn close-btn" onclick="closeSalesReportModal()">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+        // DOM Elements
+        const loginWrapper = document.getElementById("loginWrapper");
+        const posWrapper = document.getElementById("posWrapper");
+        const adminWrapper = document.getElementById("adminWrapper");
+        const loginForm = document.getElementById("loginForm");
+        const signUpForm = document.getElementById("signUpForm");
+        const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+        const message = document.getElementById("message");
+
+        // LOCALSTORAGE KEYS
+        let accounts = JSON.parse(localStorage.getItem("sisig_accounts_v8")) || [
+            { 
+                id: 1, 
+                firstName: "System", 
+                lastName: "Admin", 
+                email: "admin@gmail.com", 
+                phoneNumber: "09170000000", 
+                securityQuestion: "What is your mother's maiden name?", 
+                securityAnswer: "Admin", 
+                username: "admin", 
+                password: "admin123", 
+                role: "admin", 
+                status: "approved" 
+            },
+            { 
+                id: 2, 
+                firstName: "Juan", 
+                lastName: "Dela Cruz", 
+                email: "juan@gmail.com", 
+                phoneNumber: "09181112222", 
+                securityQuestion: "What was the name of your first pet?", 
+                securityAnswer: "Doggy", 
+                username: "cashier1", 
+                password: "user123", 
+                role: "user", 
+                status: "approved" 
+            },
+            { 
+                id: 3, 
+                firstName: "Maria", 
+                lastName: "Santos", 
+                email: "maria@gmail.com", 
+                phoneNumber: "09193334444", 
+                securityQuestion: "In what city were you born?", 
+                securityAnswer: "Manila", 
+                username: "cashier2", 
+                password: "user123", 
+                role: "user", 
+                status: "pending" 
+            }
+        ];
+
+        let userActivityLogs = JSON.parse(localStorage.getItem("sisig_logs_v8")) || [
+            { username: "cashier1", action: "LOGIN", timestamp: new Date().toLocaleString() }
+        ];
+
+        let menuItems = JSON.parse(localStorage.getItem("sisig_menu_v8")) || [
+            { id: 1, name: "Tapa Sisig Without Rice", price: 55, stock: 15, category: "sisig", icon: "🥩" },
+            { id: 2, name: "Tapa Sisig With Rice", price: 65, stock: 15, category: "sisig", icon: "🥩" },
+            { id: 3, name: "Pork Sisig Without Rice", price: 55, stock: 20, category: "sisig", icon: "🍖" },
+            { id: 4, name: "Pork Sisig With Rice", price: 65, stock: 20, category: "sisig", icon: "🍖" },
+            { id: 5, name: "Chicken Sisig Without Rice", price: 55, stock: 12, category: "sisig", icon: "🍗" },
+            { id: 6, name: "Chicken Sisig With Rice", price: 65, stock: 12, category: "sisig", icon: "🍗" },
+            { id: 7, name: "Extra Rice", price: 15, stock: 50, category: "addons", icon: "🍚" },
+            { id: 8, name: "Extra Egg", price: 15, stock: 40, category: "addons", icon: "🥚" },
+            { id: 12, name: "Coke", price: 25, stock: 30, category: "drinks", icon: "🥤" },
+            { id: 13, name: "Water - Small", price: 15, stock: 40, category: "drinks", icon: "💧" },
+            { id: 14, name: "Water - Big", price: 25, stock: 30, category: "drinks", icon: "🍾" },
+            { id: 15, name: "Mountain Dew", price: 25, stock: 25, category: "drinks", icon: "🥤" }
+        ];
+
+        let takeoutFeeSetting = parseFloat(localStorage.getItem("sisig_takeout_fee_v8")) || 10;
+        let salesHistory = JSON.parse(localStorage.getItem("sisig_sales_v8")) || [];
+        let orderCounter = parseInt(localStorage.getItem("sisig_counter_v8")) || 1001;
+
+        let currentUser = JSON.parse(localStorage.getItem("sisig_current_user_v8")) || null;
+        let cart = [];
+        let orderType = "dine-in";
+        let paymentMethod = "cash";
+        let currentCategory = 'all';
+        let currentReportFilter = 'day';
+
+        // SAVE STATE TO LOCALSTORAGE
+        function saveData() {
+            localStorage.setItem("sisig_accounts_v8", JSON.stringify(accounts));
+            localStorage.setItem("sisig_logs_v8", JSON.stringify(userActivityLogs));
+            localStorage.setItem("sisig_menu_v8", JSON.stringify(menuItems));
+            localStorage.setItem("sisig_takeout_fee_v8", takeoutFeeSetting);
+            localStorage.setItem("sisig_sales_v8", JSON.stringify(salesHistory));
+            localStorage.setItem("sisig_counter_v8", orderCounter);
+            if (currentUser) {
+                localStorage.setItem("sisig_current_user_v8", JSON.stringify(currentUser));
+            } else {
+                localStorage.removeItem("sisig_current_user_v8");
+            }
+        }
+
+        // REAL-TIME CROSS-TAB SYNCHRONIZATION EVENT LISTENER
+        window.addEventListener("storage", function (e) {
+            accounts = JSON.parse(localStorage.getItem("sisig_accounts_v8")) || accounts;
+            userActivityLogs = JSON.parse(localStorage.getItem("sisig_logs_v8")) || userActivityLogs;
+            menuItems = JSON.parse(localStorage.getItem("sisig_menu_v8")) || menuItems;
+            takeoutFeeSetting = parseFloat(localStorage.getItem("sisig_takeout_fee_v8")) || takeoutFeeSetting;
+            salesHistory = JSON.parse(localStorage.getItem("sisig_sales_v8")) || salesHistory;
+            orderCounter = parseInt(localStorage.getItem("sisig_counter_v8")) || orderCounter;
+
+            if (adminWrapper.style.display === "flex") {
+                renderUserAccountsTable();
+                renderUserLogsTable();
+                renderInventoryTable();
+                updateSalesReport();
+                renderSalesHistory();
+            } else if (posWrapper.style.display === "flex") {
+                renderMenu();
+                updateCartDisplay();
+            }
+        });
+
+        // AUTO RESTORE SESSION ON LOAD
+        window.addEventListener("DOMContentLoaded", () => {
+            if (currentUser) {
+                loginWrapper.style.display = "none";
+                if (currentUser.role === "admin") {
+                    document.getElementById("adminUserDisplay").textContent = currentUser.username;
+                    document.getElementById("adminNavBtn").style.display = "inline-block";
+                    adminWrapper.style.display = "flex";
+                    showAdminSection('secApprovals', document.querySelectorAll('.admin-nav-btn')[0]);
+                    renderUserAccountsTable();
+                    renderUserLogsTable();
+                    renderInventoryTable();
+                    updateSalesReport();
+                    renderSalesHistory();
+                } else {
+                    document.getElementById("loggedInUserDisplay").textContent = currentUser.username;
+                    document.getElementById("adminNavBtn").style.display = "none";
+                    posWrapper.style.display = "flex";
+                    renderMenu();
+                    updateCartDisplay();
+                }
+            }
+        });
+
+        // SWITCH BETWEEN ADMIN DASHBOARD AND POS MODE
+        function switchToPOS() {
+            if (!currentUser) {
+                alert("Please log in first.");
+                loginWrapper.style.display = "flex";
+                posWrapper.style.display = "none";
+                adminWrapper.style.display = "none";
+                return;
+            }
+
+            if (currentUser.role !== "admin") {
+                alert("Only the admin account can switch modes.");
+                return;
+            }
+
+            loginWrapper.style.display = "none";
+            adminWrapper.style.display = "none";
+            posWrapper.style.display = "flex";
+            document.getElementById("loggedInUserDisplay").textContent = currentUser.username;
+            document.getElementById("adminNavBtn").style.display = "inline-block";
+            renderMenu();
+            updateCartDisplay();
+        }
+
+        function switchToAdmin() {
+            if (!currentUser || currentUser.role !== "admin") {
+                alert("Admin access only.");
+                return;
+            }
+
+            loginWrapper.style.display = "none";
+            posWrapper.style.display = "none";
+            adminWrapper.style.display = "flex";
+            document.getElementById("adminUserDisplay").textContent = currentUser.username;
+            document.getElementById("adminNavBtn").style.display = "inline-block";
+            showAdminSection("secApprovals", document.querySelectorAll(".admin-nav-btn")[0]);
+            renderUserAccountsTable();
+            renderUserLogsTable();
+            renderInventoryTable();
+            updateSalesReport();
+            renderSalesHistory();
+        }
+
+        function logoutSystem() {
+            if (currentUser) {
+                userActivityLogs.push({
+                    username: currentUser.username,
+                    action: "LOGOUT",
+                    timestamp: new Date().toLocaleString()
+                });
+            }
+            currentUser = null;
+            cart = [];
+            saveData();
+            loginWrapper.style.display = "flex";
+            posWrapper.style.display = "none";
+            adminWrapper.style.display = "none";
+            document.getElementById("adminNavBtn").style.display = "none";
+            loginForm.reset();
+            signUpForm.reset();
+            forgotPasswordForm.reset();
+            message.className = "message";
+            message.textContent = "";
+        }
+
+        // SWITCH BETWEEN 5 ADMIN SECTIONS
+        function showAdminSection(sectionId, btnElement) {
+            document.querySelectorAll(".admin-section").forEach(sec => {
+                sec.classList.remove("active-view");
+            });
+
+            document.querySelectorAll(".admin-nav-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.classList.add("active-view");
+            }
+
+            if (btnElement) {
+                btnElement.classList.add("active");
+            }
+        }
+
+        // TOGGLE LOGIN / SIGN UP / FORGOT PASSWORD
+        function toggleAuthMode(mode) {
+            document.getElementById("loginFormSection").style.display = mode === 'login' ? "block" : "none";
+            document.getElementById("signUpFormSection").style.display = mode === 'signup' ? "block" : "none";
+            document.getElementById("forgotPasswordSection").style.display = mode === 'forgot' ? "block" : "none";
+            message.className = "message";
+            message.textContent = "";
+
+            if(mode === 'forgot'){
+                document.getElementById("forgotQuestionBox").style.display = "none";
+                document.getElementById("forgotNewPasswordBox").style.display = "none";
+                document.getElementById("forgotCheckBtn").style.display = "block";
+                document.getElementById("forgotResetBtn").style.display = "none";
+            }
+        }
+
+        // TOGGLE PASSWORDS
+        document.getElementById("toggleLoginPassword").addEventListener("click", function () {
+            const pwd = document.getElementById("loginPassword");
+            pwd.type = pwd.type === "password" ? "text" : "password";
+            this.textContent = pwd.type === "password" ? "👁️" : "🙈";
+        });
+
+        document.getElementById("toggleSignUpPassword").addEventListener("click", function () {
+            const pwd = document.getElementById("signUpPassword");
+            pwd.type = pwd.type === "password" ? "text" : "password";
+            this.textContent = pwd.type === "password" ? "👁️" : "🙈";
+        });
+
+        function clearLoginForm() {
+            document.getElementById("loginUsername").value = "";
+            document.getElementById("loginPassword").value = "";
+            message.className = "message";
+            message.textContent = "";
+        }
+
+        function clearSignUpForm() {
+            signUpForm.reset();
+            message.className = "message";
+            message.textContent = "";
+        }
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = "message " + type;
+        }
+
+        // LOGIN PROCESS
+        loginForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const uName = document.getElementById("loginUsername").value.trim();
+            const pWord = document.getElementById("loginPassword").value;
+
+            const account = accounts.find(acc => acc.username.toLowerCase() === uName.toLowerCase() && acc.password === pWord);
+
+            if (!account) {
+                showMessage("Invalid username or password!", "error");
+                return;
+            }
+
+            if (account.role === "user" && account.status !== "approved") {
+                showMessage("Your account is pending Admin approval. Please contact Admin.", "error");
+                return;
+            }
+
+            currentUser = account;
+
+            userActivityLogs.push({
+                username: account.username,
+                action: "LOGIN",
+                timestamp: new Date().toLocaleString()
+            });
+
+            saveData();
+
+            showMessage(`Welcome, ${account.username}! Redirecting...`, "success");
+
+            setTimeout(() => {
+                loginWrapper.style.display = "none";
+
+                if (account.role === "admin") {
+                    document.getElementById("adminUserDisplay").textContent = account.username;
+                    document.getElementById("adminNavBtn").style.display = "inline-block";
+                    adminWrapper.style.display = "flex";
+                    
+                    showAdminSection('secApprovals', document.querySelectorAll('.admin-nav-btn')[0]);
+
+                    renderUserAccountsTable();
+                    renderUserLogsTable();
+                    renderInventoryTable();
+                    updateSalesReport();
+                    renderSalesHistory();
+                } else {
+                    document.getElementById("loggedInUserDisplay").textContent = account.username;
+                    document.getElementById("adminNavBtn").style.display = "none";
+                    posWrapper.style.display = "flex";
+                    renderMenu();
+                    updateCartDisplay();
+                }
+            }, 800);
+        });
+
+        // SIGN UP PROCESS
+        signUpForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const firstName = document.getElementById("signUpFirstName").value.trim();
+            const lastName = document.getElementById("signUpLastName").value.trim();
+            const email = document.getElementById("signUpEmail").value.trim();
+            const phoneNumber = document.getElementById("signUpPhone").value.trim();
+            const securityQuestion = document.getElementById("signUpSecurityQuestion").value;
+            const securityAnswer = document.getElementById("signUpSecurityAnswer").value.trim();
+            const username = document.getElementById("signUpUsername").value.trim();
+            const password = document.getElementById("signUpPassword").value;
+
+            if (!firstName || !lastName || !email || !phoneNumber || !securityQuestion || !securityAnswer || !username || !password) {
+                showMessage("Please fill in all fields including security question.", "error");
+                return;
+            }
+
+            if (password.length < 8) {
+                showMessage("Password must be at least 8 characters long.", "error");
+                return;
+            }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                showMessage("Please enter a valid email address.", "error");
+                return;
+            }
+
+            const usernameExists = accounts.some(acc => acc.username.toLowerCase() === username.toLowerCase());
+            if (usernameExists) {
+                showMessage("Username already exists. Choose another.", "error");
+                return;
+            }
+
+            const emailExists = accounts.some(acc => acc.email && acc.email.toLowerCase() === email.toLowerCase());
+            if (emailExists) {
+                showMessage("Email address is already registered.", "error");
+                return;
+            }
+
+            const newAccount = {
+                id: Date.now(),
+                firstName,
+                lastName,
+                email,
+                phoneNumber,
+                securityQuestion,
+                securityAnswer,
+                username,
+                password,
+                role: "user",
+                status: "pending"
+            };
+
+            accounts.push(newAccount);
+            try {
+                saveData();
+            } catch (error) {
+                accounts.pop();
+                console.error("Unable to save new account:", error);
+                showMessage("Could not save the account. Check browser storage.", "error");
+                return;
+            }
+
+            renderUserAccountsTable();
+            clearSignUpForm();
+            showMessage("Account created successfully. Waiting for Admin approval.", "success");
+
+            setTimeout(function () {
+                toggleAuthMode("login");
+                showMessage("Your account is pending Admin approval.", "success");
+            }, 1800);
+        });
+
+        // FORGOT PASSWORD PROCESS
+        function loadUserSecurityQuestion() {
+            const usernameInput = document.getElementById("forgotUsername").value.trim();
+            if (!usernameInput) {
+                showMessage("Please enter your Username.", "error");
+                return;
+            }
+
+            const account = accounts.find(acc => acc.username.toLowerCase() === usernameInput.toLowerCase());
+            if (!account) {
+                showMessage("User account not found.", "error");
+                document.getElementById("forgotQuestionBox").style.display = "none";
+                document.getElementById("forgotNewPasswordBox").style.display = "none";
+                document.getElementById("forgotCheckBtn").style.display = "block";
+                document.getElementById("forgotResetBtn").style.display = "none";
+                return;
+            }
+
+            document.getElementById("displayForgotQuestion").textContent = account.securityQuestion || "No security question set.";
+            document.getElementById("forgotQuestionBox").style.display = "block";
+            document.getElementById("forgotNewPasswordBox").style.display = "block";
+            document.getElementById("forgotCheckBtn").style.display = "none";
+            document.getElementById("forgotResetBtn").style.display = "block";
+            message.className = "message";
+            message.textContent = "";
+        }
+
+        forgotPasswordForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const usernameInput = document.getElementById("forgotUsername").value.trim();
+            const answerInput = document.getElementById("forgotAnswer").value.trim();
+            const newPasswordInput = document.getElementById("forgotNewPassword").value;
+
+            const account = accounts.find(acc => acc.username.toLowerCase() === usernameInput.toLowerCase());
+
+            if (!account) {
+                showMessage("User account not found.", "error");
+                return;
+            }
+
+            if (account.securityAnswer && account.securityAnswer.toLowerCase() !== answerInput.toLowerCase()) {
+                showMessage("Incorrect Security Answer!", "error");
+                return;
+            }
+
+            if (newPasswordInput.length < 8) {
+                showMessage("New password must be at least 8 characters long.", "error");
+                return;
+            }
+
+            account.password = newPasswordInput;
+            saveData();
+
+            showMessage("Password successfully reset! Redirecting to login...", "success");
+
+            setTimeout(() => {
+                forgotPasswordForm.reset();
+                toggleAuthMode("login");
+            }, 1800);
+        });
+
+        // ADMIN USER & LOGS MANAGEMENT WITH COMPLETE SIGN UP DETAILS
+        function renderUserAccountsTable() {
+            const tbody = document.getElementById("userAccountsTableBody");
+            tbody.innerHTML = "";
+
+            let pendingCount = 0;
+
+            accounts.forEach(acc => {
+                if (acc.username === "admin") return;
+                if (acc.status === "pending") pendingCount++;
+
+                const tr = document.createElement("tr");
+                const isApproved = acc.status === "approved";
+
+                const fullName = (acc.firstName && acc.lastName) ? `${acc.firstName} ${acc.lastName}` : "N/A";
+                const contactInfo = `📧 ${acc.email || 'N/A'}<br>📱 ${acc.phoneNumber || 'N/A'}`;
+                const secQnA = `<strong>Q:</strong> ${acc.securityQuestion || 'N/A'}<br><strong>A:</strong> ${acc.securityAnswer || 'N/A'}`;
+
+                tr.innerHTML = `
+                    <td><strong>${fullName}</strong></td>
+                    <td style="font-size: 11px;">${contactInfo}</td>
+                    <td style="font-size: 11px; max-width: 200px; white-space: normal;">${secQnA}</td>
+                    <td><strong>${acc.username}</strong></td>
+                    <td style="text-transform: uppercase;">${acc.role}</td>
+                    <td>
+                        <span class="status-badge ${isApproved ? 'status-approved' : 'status-pending'}">
+                            ${acc.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="add-stock-group">
+                            <input type="text" id="edit-pwd-${acc.id}" class="edit-price-input" value="${acc.password}" placeholder="New password" style="width: 100px;">
+                            <button class="action-btn-sm btn-approve" onclick="updateUserPassword(${acc.id})">Save</button>
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        ${!isApproved ? `<button class="action-btn-sm btn-approve" onclick="approveUserAccount(${acc.id})">Approve</button>` : ''}
+                        <button class="action-btn-sm btn-delete" onclick="deleteUserAccount(${acc.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById("pendingBadge").textContent = pendingCount;
+        }
+
+        function updateUserPassword(accId) {
+            const pwdInput = document.getElementById(`edit-pwd-${accId}`);
+            const newPwd = pwdInput.value.trim();
+
+            if (!newPwd) {
+                alert("Please enter a valid password.");
+                return;
+            }
+
+            const acc = accounts.find(a => a.id === accId);
+            if (acc) {
+                acc.password = newPwd;
+                saveData();
+                alert(`Successfully updated password for user '${acc.username}'!`);
+                renderUserAccountsTable();
+            }
+        }
+
+        function approveUserAccount(accId) {
+            const acc = accounts.find(a => a.id === accId);
+            if (acc) {
+                acc.status = "approved";
+                saveData();
+                renderUserAccountsTable();
+                alert(`Account '${acc.username}' has been approved successfully!`);
+            }
+        }
+
+        function approveAllPendingUsers() {
+            const pendingUsers = accounts.filter(a => a.status === "pending");
+            if (pendingUsers.length === 0) {
+                alert("No pending accounts to approve.");
+                return;
+            }
+
+            if (confirm(`Approve all ${pendingUsers.length} pending user accounts?`)) {
+                accounts.forEach(a => { if (a.status === "pending") a.status = "approved"; });
+                saveData();
+                renderUserAccountsTable();
+                alert("All pending accounts approved!");
+            }
+        }
+
+        function deleteUserAccount(accId) {
+            const acc = accounts.find(a => a.id === accId);
+            if (acc && confirm(`Are you sure you want to delete user account '${acc.username}'?`)) {
+                accounts = accounts.filter(a => a.id !== accId);
+                saveData();
+                renderUserAccountsTable();
+            }
+        }
+
+        function renderUserLogsTable() {
+            const tbody = document.getElementById("userLogsTableBody");
+            tbody.innerHTML = "";
+
+            if (userActivityLogs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--muted); padding: 15px;">No activity logs available.</td></tr>`;
+                return;
+            }
+
+            userActivityLogs.slice().reverse().forEach(log => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${log.username}</strong></td>
+                    <td><span style="font-weight: 800; color: ${log.action === 'LOGIN' ? 'var(--success)' : 'var(--red)'}">${log.action}</span></td>
+                    <td>${log.timestamp}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function clearLoginLogs() {
+            if (confirm("Clear all user activity logs?")) {
+                userActivityLogs = [];
+                saveData();
+                renderUserLogsTable();
+            }
+        }
+
+        // POS SYSTEM FUNCTIONS
+        function renderMenu() {
+            const menuGrid = document.getElementById("menuGrid");
+            menuGrid.innerHTML = "";
+
+            const searchQuery = document.getElementById("searchInput").value.toLowerCase().trim();
+
+            const itemsToDisplay = menuItems.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchQuery);
+                if (searchQuery.length > 0) {
+                    return matchesSearch;
+                }
+                const matchesCategory = currentCategory === 'all' || item.category === currentCategory;
+                return matchesCategory && matchesSearch;
+            });
+
+            if (itemsToDisplay.length === 0) {
+                menuGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--muted); margin-top: 30px;">No items found.</p>`;
+                return;
+            }
+
+            itemsToDisplay.forEach(item => {
+                const isOutOfStock = item.stock <= 0;
+                const card = document.createElement("div");
+                card.className = `menu-card ${isOutOfStock ? 'out-of-stock' : ''}`;
+
+                let displayIcon = item.icon || "🍽️";
+                if (item.icon && (item.icon.startsWith('http') || item.icon.startsWith('data:image'))) {
+                    displayIcon = `<img src="${item.icon}" alt="${item.name}">`;
+                }
+
+                card.innerHTML = `
+                    <div class="icon-box">${displayIcon}</div>
+                    <div class="title">${item.name}</div>
+                    <div class="stock-badge">Stock: ${item.stock}</div>
+                    <div class="price">₱${item.price.toFixed(2)}</div>
+                    
+                    <div class="order-qty-control">
+                        <button class="order-qty-btn" onclick="changeOrderQty(${item.id}, -1)" ${isOutOfStock ? 'disabled' : ''}>-</button>
+                        <input type="number" id="qty-input-${item.id}" class="order-qty-input" value="1" min="1" max="${item.stock}" ${isOutOfStock ? 'disabled' : ''} onchange="validateQtyInput(${item.id})">
+                        <button class="order-qty-btn" onclick="changeOrderQty(${item.id}, 1)" ${isOutOfStock ? 'disabled' : ''}>+</button>
+                    </div>
+
+                    <button class="add-cart-btn" onclick="addSelectedQtyToCart(${item.id})" ${isOutOfStock ? 'disabled' : ''}>
+                        ${isOutOfStock ? 'OUT OF STOCK' : 'ADD'}
+                    </button>
+                `;
+                menuGrid.appendChild(card);
+            });
+        }
+
+        function filterCategory(category, btnElement) {
+            currentCategory = category;
+            document.querySelectorAll(".cat-btn").forEach(btn => btn.classList.remove("active"));
+            if (btnElement) btnElement.classList.add("active");
+            renderMenu();
+        }
+
+        function handleSearch() {
+            renderMenu();
+        }
+
+        function setOrderType(type) {
+            orderType = type;
+            document.getElementById("btnDineIn").classList.toggle("active", type === "dine-in");
+            document.getElementById("btnTakeOut").classList.toggle("active", type === "take-out");
+            document.getElementById("takeoutFeeRow").style.display = type === "take-out" ? "flex" : "none";
+            updateCartDisplay();
+        }
+
+        function setPaymentMethod(method) {
+            paymentMethod = method;
+            document.querySelectorAll(".pay-method-btn").forEach(btn => btn.classList.remove("active"));
+            
+            if (method === 'cash') {
+                document.getElementById("payCash").classList.add("active");
+                document.getElementById("cashInputGroup").style.display = "block";
+                document.getElementById("refInputGroup").style.display = "none";
+            } else {
+                if (method === 'gcash') document.getElementById("payGCash").classList.add("active");
+                if (method === 'bank') document.getElementById("payBank").classList.add("active");
+
+                document.getElementById("cashInputGroup").style.display = "none";
+                document.getElementById("refInputGroup").style.display = "block";
+            }
+        }
+
+        function changeOrderQty(itemId, change) {
+            const qtyInput = document.getElementById(`qty-input-${itemId}`);
+            const menuItem = menuItems.find(item => item.id === itemId);
+            let currentVal = parseInt(qtyInput.value) || 1;
+            
+            currentVal += change;
+            if (currentVal < 1) currentVal = 1;
+            if (currentVal > menuItem.stock) currentVal = menuItem.stock;
+
+            qtyInput.value = currentVal;
+        }
+
+        function validateQtyInput(itemId) {
+            const qtyInput = document.getElementById(`qty-input-${itemId}`);
+            const menuItem = menuItems.find(item => item.id === itemId);
+            let val = parseInt(qtyInput.value) || 1;
+
+            if (val < 1) val = 1;
+            if (val > menuItem.stock) val = menuItem.stock;
+
+            qtyInput.value = val;
+        }
+
+        function addSelectedQtyToCart(itemId) {
+            const menuItem = menuItems.find(item => item.id === itemId);
+            const qtyInput = document.getElementById(`qty-input-${itemId}`);
+            const qtyToAdd = parseInt(qtyInput.value) || 1;
+
+            if (menuItem.stock < qtyToAdd) {
+                alert(`Not enough stock! Only ${menuItem.stock} left.`);
+                return;
+            }
+
+            menuItem.stock -= qtyToAdd;
+
+            const existingItem = cart.find(item => item.id === itemId);
+            if (existingItem) {
+                existingItem.qty += qtyToAdd;
+            } else {
+                cart.push({ ...menuItem, qty: qtyToAdd });
+            }
+
+            renderMenu();
+            updateCartDisplay();
+        }
+
+        function updateQty(itemId, change) {
+            const menuItem = menuItems.find(item => item.id === itemId);
+            const cartItem = cart.find(item => item.id === itemId);
+
+            if (change > 0) {
+                if (menuItem.stock <= 0) {
+                    alert("No more stock available!");
+                    return;
+                }
+                menuItem.stock -= 1;
+                cartItem.qty += 1;
+            } else {
+                menuItem.stock += 1;
+                cartItem.qty -= 1;
+                if (cartItem.qty <= 0) {
+                    cart = cart.filter(i => i.id !== itemId);
+                }
+            }
+
+            renderMenu();
+            updateCartDisplay();
+        }
+
+        function clearCart() {
+            cart.forEach(cartItem => {
+                const menuItem = menuItems.find(item => item.id === cartItem.id);
+                if (menuItem) {
+                    menuItem.stock += cartItem.qty;
+                }
+            });
+            cart = [];
+            document.getElementById("cashInput").value = "";
+            document.getElementById("refNoInput").value = "";
+            renderMenu();
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const cartContainer = document.getElementById("cartItems");
+            cartContainer.innerHTML = "";
+
+            let subtotal = 0;
+
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `<p style="text-align: center; color: var(--muted); margin-top: 30px;">No items selected</p>`;
+            } else {
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.qty;
+                    subtotal += itemTotal;
+
+                    const cartRow = document.createElement("div");
+                    cartRow.className = "cart-item";
+                    cartRow.innerHTML = `
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">₱${item.price.toFixed(2)} x ${item.qty} = ₱${itemTotal.toFixed(2)}</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                            <span>${item.qty}</span>
+                            <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                        </div>
+                    `;
+                    cartContainer.appendChild(cartRow);
+                });
+            }
+
+            document.getElementById("takeoutLabelDisplay").textContent = `₱${takeoutFeeSetting}`;
+            document.getElementById("takeoutFeeAmount").textContent = `₱${takeoutFeeSetting.toFixed(2)}`;
+            const takeoutFee = orderType === "take-out" ? takeoutFeeSetting : 0;
+            const total = subtotal + takeoutFee;
+
+            document.getElementById("subtotalAmount").textContent = `₱${subtotal.toFixed(2)}`;
+            document.getElementById("totalAmount").textContent = `₱${total.toFixed(2)}`;
+
+            calculateChange();
+        }
+
+        function calculateChange() {
+            const totalText = document.getElementById("totalAmount").textContent.replace("₱", "");
+            const total = parseFloat(totalText) || 0;
+            const cash = parseFloat(document.getElementById("cashInput").value) || 0;
+            const change = cash - total;
+
+            document.getElementById("changeAmount").textContent = change >= 0 ? `₱${change.toFixed(2)}` : "₱0.00";
+        }
+
+        function processPayment() {
+            const totalText = document.getElementById("totalAmount").textContent.replace("₱", "");
+            const total = parseFloat(totalText) || 0;
+
+            if (cart.length === 0) {
+                alert("Please add items to the cart first!");
+                return;
+            }
+
+            if (paymentMethod === "cash") {
+                const cash = parseFloat(document.getElementById("cashInput").value) || 0;
+                if (cash < total) {
+                    alert("Insufficient cash payment!");
+                    return;
+                }
+                finalizeOrder(cash, "-");
+            } else {
+                const refNo = document.getElementById("refNoInput").value.trim();
+                if (!refNo) {
+                    alert("Please enter a Reference Number for non-cash payment!");
+                    return;
+                }
+                finalizeOrder(total, refNo);
+            }
+        }
+
+        function finalizeOrder(cashVal, refNoVal) {
+            let subtotalSum = 0;
+            cart.forEach(item => {
+                subtotalSum += item.price * item.qty;
+            });
+
+            const takeoutFee = orderType === "take-out" ? takeoutFeeSetting : 0;
+            const totalCalc = subtotalSum + takeoutFee;
+            const currentOrderNum = `ORD-${orderCounter}`;
+            orderCounter++;
+
+            salesHistory.push({
+                orderNo: currentOrderNum,
+                date: new Date(),
+                type: orderType.toUpperCase(),
+                payment: paymentMethod.toUpperCase(),
+                refNo: refNoVal,
+                items: [...cart],
+                total: totalCalc
+            });
+
+            saveData();
+            buildReceiptModal(currentOrderNum, cashVal, refNoVal, subtotalSum, totalCalc);
+        }
+
+        function buildReceiptModal(orderNum, cashVal, refNoVal, subtotalSum, totalCalc) {
+            const tableBody = document.getElementById("receiptTableBody");
+            tableBody.innerHTML = "";
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${item.name}</td>
+                    <td class="right">${item.qty}</td>
+                    <td class="right">₱${itemTotal.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            document.getElementById("receiptOrderNum").textContent = `Order No: ${orderNum}`;
+            document.getElementById("rcpSubtotal").textContent = `₱${subtotalSum.toFixed(2)}`;
+            document.getElementById("rcpTakeoutRow").style.display = orderType === "take-out" ? "flex" : "none";
+            document.getElementById("rcpTakeoutFeeVal").textContent = `₱${takeoutFeeSetting.toFixed(2)}`;
+            document.getElementById("rcpTotal").textContent = `₱${totalCalc.toFixed(2)}`;
+            document.getElementById("rcpPayMethod").textContent = paymentMethod.toUpperCase();
+
+            if (paymentMethod === "cash") {
+                document.getElementById("rcpRefRow").style.display = "none";
+                document.getElementById("rcpChangeRow").style.display = "flex";
+                document.getElementById("rcpCash").textContent = `₱${cashVal.toFixed(2)}`;
+                document.getElementById("rcpChange").textContent = `₱${(cashVal - totalCalc).toFixed(2)}`;
+            } else {
+                document.getElementById("rcpRefRow").style.display = "flex";
+                document.getElementById("rcpRefNo").textContent = refNoVal;
+                document.getElementById("rcpChangeRow").style.display = "none";
+                document.getElementById("rcpCash").textContent = `₱${totalCalc.toFixed(2)}`;
+            }
+
+            document.getElementById("receiptOrderType").textContent = orderType === "take-out" ? `[ TAKE OUT (+₱${takeoutFeeSetting}) ]` : "[ DINE IN ]";
+            document.getElementById("receiptDateTime").textContent = new Date().toLocaleString();
+
+            document.getElementById("receiptModal").style.display = "flex";
+        }
+
+        function printReceipt() {
+            window.print();
+        }
+
+        function closeReceiptModal() {
+            document.getElementById("receiptModal").style.display = "none";
+            cart = [];
+            document.getElementById("cashInput").value = "";
+            document.getElementById("refNoInput").value = "";
+            document.getElementById("searchInput").value = "";
+            currentCategory = 'all';
+            document.querySelectorAll(".cat-btn").forEach((btn, index) => {
+                btn.classList.toggle("active", index === 0);
+            });
+            renderMenu();
+            updateCartDisplay();
+        }
+
+        // SALES REPORT RECEIPT MODAL FUNCTIONS
+        function openSalesReportModal() {
+            const totalSalesStr = document.getElementById("reportTotalSales").textContent;
+            const txCountStr = document.getElementById("reportTotalCount").textContent;
+
+            document.getElementById("srpReportDate").textContent = "Generated: " + new Date().toLocaleString();
+            document.getElementById("srpPeriod").textContent = currentReportFilter.toUpperCase();
+            document.getElementById("srpTxCount").textContent = txCountStr;
+            document.getElementById("srpTotalSalesAmount").textContent = totalSalesStr;
+
+            document.getElementById("salesReportModal").style.display = "flex";
+        }
+
+        function printSalesReport() {
+            window.print();
+        }
+
+        function closeSalesReportModal() {
+            document.getElementById("salesReportModal").style.display = "none";
+        }
+
+        // ADMIN INVENTORY, PRICE, TAKE OUT FEE & ITEM MANAGEMENT WITH IMAGE UPLOAD
+        function renderInventoryTable() {
+            document.getElementById("adminTakeoutFeeInput").value = takeoutFeeSetting;
+
+            const tbody = document.getElementById("inventoryTableBody");
+            tbody.innerHTML = "";
+
+            const invSearchQuery = document.getElementById("inventorySearchInput").value.toLowerCase().trim();
+
+            const itemsToDisplay = menuItems.filter(item => {
+                return item.name.toLowerCase().includes(invSearchQuery) || item.category.toLowerCase().includes(invSearchQuery);
+            });
+
+            if (itemsToDisplay.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--muted); padding: 20px;">No inventory items found.</td></tr>`;
+                return;
+            }
+
+            itemsToDisplay.forEach(item => {
+                const tr = document.createElement("tr");
+                let imgCell = `<div style="width:35px;height:35px;background:#f4dfe1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;">${item.icon || '🍽️'}</div>`;
+                if (item.icon && (item.icon.startsWith('http') || item.icon.startsWith('data:image'))) {
+                    imgCell = `<img src="${item.icon}" alt="${item.name}" style="width:35px;height:35px;border-radius:50%;object-fit:cover;">`;
+                }
+
+                tr.innerHTML = `
+                    <td>${imgCell}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td style="text-transform: capitalize;">${item.category}</td>
+                    <td>
+                        <div class="add-stock-group">
+                            <input type="number" id="edit-price-${item.id}" class="edit-price-input inventory-price-input" data-id="${item.id}" value="${item.price}" min="1" step="any">
+                            <button class="action-btn-sm btn-approve" onclick="updateItemPrice(${item.id})">Save</button>
+                        </div>
+                    </td>
+                    <td><span style="font-weight: 800; color: ${item.stock <= 5 ? 'var(--red)' : 'var(--text)'}">${item.stock}</span></td>
+                    <td>
+                        <div class="add-stock-group">
+                            <input type="number" id="adjust-stock-${item.id}" class="add-stock-input" value="10" min="1">
+                            <button class="action-btn-sm btn-approve" onclick="adjustStock(${item.id}, 'add')">+</button>
+                            <button class="action-btn-sm btn-delete" onclick="adjustStock(${item.id}, 'minus')">-</button>
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        <button class="action-btn-sm btn-delete" onclick="deleteMenuItem(${item.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateTakeoutFee() {
+            const input = document.getElementById("adminTakeoutFeeInput");
+            const newFee = parseFloat(input.value);
+
+            if (isNaN(newFee) || newFee < 0) {
+                alert("Please enter a valid take-out fee amount.");
+                return;
+            }
+
+            takeoutFeeSetting = newFee;
+            saveData();
+            updateCartDisplay();
+            alert(`Successfully updated Take Out Fee to ₱${takeoutFeeSetting.toFixed(2)}!`);
+        }
+
+        function addNewMenuItem() {
+            const nameInput = document.getElementById("newItemName");
+            const categoryInput = document.getElementById("newItemCategory");
+            const priceInput = document.getElementById("newItemPrice");
+            const stockInput = document.getElementById("newItemStock");
+            const iconInput = document.getElementById("newItemIcon");
+            const imageFile = document.getElementById("newItemImageFile").files[0];
+
+            const name = nameInput.value.trim();
+            const category = categoryInput.value;
+            const price = parseFloat(priceInput.value);
+            const stock = parseInt(stockInput.value);
+            const emojiVal = iconInput.value.trim() || "🔥";
+
+            if (!name || isNaN(price) || price <= 0 || isNaN(stock) || stock < 0) {
+                alert("Please fill in valid item name, price, and stock quantity.");
+                return;
+            }
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Image = e.target.result;
+                    saveNewProductRecord(name, category, price, stock, base64Image);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                saveNewProductRecord(name, category, price, stock, emojiVal);
+            }
+        }
+
+        function saveNewProductRecord(name, category, price, stock, iconData) {
+            const newId = menuItems.length > 0 ? Math.max(...menuItems.map(i => i.id)) + 1 : 1;
+
+            menuItems.push({
+                id: newId,
+                name: name,
+                price: price,
+                stock: stock,
+                category: category,
+                icon: iconData
+            });
+
+            saveData();
+            renderInventoryTable();
+            renderMenu();
+
+            document.getElementById("newItemName").value = "";
+            document.getElementById("newItemPrice").value = "";
+            document.getElementById("newItemStock").value = "";
+            document.getElementById("newItemIcon").value = "🔥";
+            document.getElementById("newItemImageFile").value = "";
+
+            alert(`Successfully added new item '${name}' to the menu!`);
+        }
+
+        function deleteMenuItem(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            if (item && confirm(`Are you sure you want to delete '${item.name}' from inventory?`)) {
+                menuItems = menuItems.filter(i => i.id !== itemId);
+                saveData();
+                renderInventoryTable();
+                renderMenu();
+            }
+        }
+
+        function updateItemPrice(itemId) {
+            const priceInput = document.getElementById(`edit-price-${itemId}`);
+            const newPrice = parseFloat(priceInput.value);
+
+            if (isNaN(newPrice) || newPrice <= 0) {
+                alert("Please enter a valid price amount.");
+                return;
+            }
+
+            const item = menuItems.find(i => i.id === itemId);
+            if (item) {
+                item.price = newPrice;
+                saveData();
+                renderInventoryTable();
+                renderMenu();
+                alert(`Successfully updated the price of ${item.name} to ₱${newPrice.toFixed(2)}!`);
+            }
+        }
+
+        function saveAllInventoryChanges() {
+            const priceInputs = document.querySelectorAll(".inventory-price-input");
+            let updatedCount = 0;
+
+            priceInputs.forEach(input => {
+                const itemId = parseInt(input.getAttribute("data-id"));
+                const newPrice = parseFloat(input.value);
+
+                if (!isNaN(newPrice) && newPrice > 0) {
+                    const item = menuItems.find(i => i.id === itemId);
+                    if (item) {
+                        item.price = newPrice;
+                        updatedCount++;
+                    }
+                }
+            });
+
+            saveData();
+            renderInventoryTable();
+            renderMenu();
+            alert(`Successfully saved all changes for ${updatedCount} items!`);
+        }
+
+        function adjustStock(itemId, actionType) {
+            const input = document.getElementById(`adjust-stock-${itemId}`);
+            const qtyVal = parseInt(input.value) || 0;
+
+            if (qtyVal <= 0) {
+                alert("Please enter a valid quantity amount.");
+                return;
+            }
+
+            const item = menuItems.find(i => i.id === itemId);
+            if (item) {
+                if (actionType === 'add') {
+                    item.stock += qtyVal;
+                    alert(`Successfully added ${qtyVal} stocks to ${item.name}!`);
+                } else if (actionType === 'minus') {
+                    if (item.stock - qtyVal < 0) {
+                        alert("Stock cannot go below zero!");
+                        return;
+                    }
+                    item.stock -= qtyVal;
+                    alert(`Successfully deducted ${qtyVal} stocks from ${item.name}!`);
+                }
+                saveData();
+                renderInventoryTable();
+                renderMenu();
+            }
+        }
+
+        function setReportFilter(filterType, btnElement) {
+            currentReportFilter = filterType;
+            document.querySelectorAll(".report-tab").forEach(tab => tab.classList.remove("active"));
+            btnElement.classList.add("active");
+
+            document.getElementById("reportPeriodLabel").textContent = `Total Sales (${filterType.toUpperCase()})`;
+            updateSalesReport();
+        }
+
+        function updateSalesReport() {
+            const now = new Date();
+            let filteredSales = salesHistory.filter(sale => {
+                const saleDate = new Date(sale.date);
+                if (currentReportFilter === 'day') {
+                    return saleDate.toDateString() === now.toDateString();
+                } else if (currentReportFilter === 'week') {
+                    const oneWeekAgo = new Date();
+                    oneWeekAgo.setDate(now.getDate() - 7);
+                    return saleDate >= oneWeekAgo;
+                } else if (currentReportFilter === 'month') {
+                    return saleDate.getMonth() === now.getMonth() && saleDate.getFullYear() === now.getFullYear();
+                } else if (currentReportFilter === 'year') {
+                    return saleDate.getFullYear() === now.getFullYear();
+                }
+                return true;
+            });
+
+            let totalSalesAmount = 0;
+            filteredSales.forEach(s => totalSalesAmount += s.total);
+
+            document.getElementById("reportTotalSales").textContent = `₱${totalSalesAmount.toFixed(2)}`;
+            document.getElementById("reportTotalCount").textContent = filteredSales.length;
+        }
+
+        function renderSalesHistory() {
+            const tbody = document.getElementById("salesHistoryTableBody");
+            tbody.innerHTML = "";
+
+            if (salesHistory.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--muted); padding: 20px;">No sales history recorded yet.</td></tr>`;
+                return;
+            }
+
+            salesHistory.slice().reverse().forEach(sale => {
+                const itemsSummary = sale.items.map(i => `${i.name} (x${i.qty})`).join(", ");
+                const referenceNoDisplay = sale.refNo ? sale.refNo : "-";
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${sale.orderNo}</strong></td>
+                    <td>${new Date(sale.date).toLocaleString()}</td>
+                    <td>${sale.type}</td>
+                    <td>${sale.payment}</td>
+                    <td><span style="font-weight: 700; color: var(--maroon);">${referenceNoDisplay}</span></td>
+                    <td style="font-size: 11px; color: var(--muted);">${itemsSummary}</td>
+                    <td style="text-align: right; font-weight: 800; color: var(--maroon);">₱${sale.total.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function clearSalesHistory() {
+            if (confirm("Are you sure you want to clear all sales history?")) {
+                salesHistory = [];
+                saveData();
+                renderSalesHistory();
+                updateSalesReport();
+            }
+        }
+    </script>
+</body>
+</html>
