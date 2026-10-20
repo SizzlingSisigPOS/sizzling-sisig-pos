@@ -32,7 +32,6 @@
         window.deleteDocData = deleteDoc;
         window.onSnapshotData = onSnapshot;
 
-        // I-trigger ang pag-load galing cloud pagbukas ng pahina
         window.addEventListener("DOMContentLoaded", () => {
             initCloudData();
         });
@@ -68,7 +67,6 @@
             color: var(--text);
         }
 
-        /* --- LOGIN, SIGNUP & FORGOT PASSWORD STYLES --- */
         .login-wrapper {
             min-height: 100vh;
             display: flex;
@@ -320,7 +318,6 @@
             color: #206b38;
         }
 
-        /* --- CASHIER / USER POS INTERFACE --- */
         .pos-wrapper {
             display: none;
             height: 100vh;
@@ -737,7 +734,6 @@
             margin-top: 8px;
         }
 
-        /* --- ADMIN DASHBOARD INTERFACE --- */
         .admin-wrapper {
             display: none;
             height: 100vh;
@@ -894,7 +890,6 @@
             text-align: center;
         }
 
-        /* CONFIG TAKE OUT FEE */
         .config-box {
             background: #fcf6f7;
             border: 1px solid var(--border);
@@ -908,7 +903,6 @@
             gap: 10px;
         }
 
-        /* ADD ITEM FORM STYLES IN INVENTORY */
         .add-item-box {
             background: #fcf6f7;
             border: 1px solid var(--border);
@@ -961,7 +955,6 @@
         .metric-label { font-size: 14px; color: var(--muted); font-weight: 700; }
         .metric-value { font-size: 28px; font-weight: 900; color: var(--maroon); margin-top: 5px; }
 
-        /* --- RECEIPT MODAL --- */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1037,10 +1030,8 @@
 </head>
 <body>
 
-    <!-- ================= LOGIN / SIGN UP / FORGOT PASSWORD SCREEN ================= -->
     <div id="loginWrapper" class="login-wrapper">
         <main class="login-container">
-            <!-- BRANDING PANEL -->
             <section class="branding-panel">
                 <div class="logo-container">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" role="img">
@@ -1084,9 +1075,7 @@
                 <p class="tagline">Pure heat, pure eat</p>
             </section>
 
-            <!-- FORM PANEL -->
             <section class="login-panel">
-                <!-- LOGIN FORM -->
                 <div id="loginFormSection">
                     <h2 class="login-heading">User Login</h2>
                     <p class="login-subheading">Please log in to access your dashboard.</p>
@@ -1120,7 +1109,6 @@
                     </div>
                 </div>
 
-                <!-- SIGN UP FORM (FOR CASHIERS) WITH SECURITY QUESTIONS -->
                 <div id="signUpFormSection" style="display: none;">
                     <h2 class="login-heading">Create Cashier Account</h2>
                     <p class="login-subheading">Sign up requires Admin Approval before logging in.</p>
@@ -1194,7 +1182,6 @@
                     </div>
                 </div>
 
-                <!-- FORGOT PASSWORD FORM -->
                 <div id="forgotPasswordSection" style="display: none;">
                     <h2 class="login-heading">Forgot Password</h2>
                     <p class="login-subheading">Verify your Security Question to reset password.</p>
@@ -1238,7 +1225,6 @@
         </main>
     </div>
 
-    <!-- ================= CASHIER / USER POS SYSTEM ================= -->
     <div id="posWrapper" class="pos-wrapper">
         <header class="pos-header">
             <div class="brand">
@@ -1252,7 +1238,6 @@
         </header>
 
         <div class="pos-main">
-            <!-- LEFT: MENU ITEMS -->
             <section class="menu-section">
                 <div class="menu-top-toolbar">
                     <div class="category-tabs">
@@ -1269,11 +1254,9 @@
                 </div>
 
                 <div class="menu-grid" id="menuGrid">
-                    <!-- Dynamic Menu Items -->
                 </div>
             </section>
 
-            <!-- RIGHT: ORDER CART -->
             <section class="cart-section">
                 <div class="cart-title">
                     <span>Current Order</span>
@@ -1293,7 +1276,6 @@
                 </div>
 
                 <div class="cart-items" id="cartItems">
-                    <!-- Selected Items -->
                 </div>
 
                 <div class="cart-summary">
@@ -1331,7 +1313,6 @@
         </div>
     </div>
 
-    <!-- ================= ADMIN DASHBOARD INTERFACE ================= -->
     <div id="adminWrapper" class="admin-wrapper">
         <header class="pos-header">
             <div class="brand">
@@ -1344,7 +1325,6 @@
             </div>
         </header>
 
-        <!-- 5 INTERFACE NAVIGATION BUTTONS -->
         <nav class="admin-nav-bar">
             <button class="admin-nav-btn active" onclick="showAdminSection('secApprovals', this)">
                 👥 User Approvals <span class="badge-count" id="pendingBadge">0</span>
@@ -1364,7 +1344,6 @@
         </nav>
 
         <div class="admin-main">
-            <!-- 1. USER APPROVALS SECTION -->
             <section id="secApprovals" class="admin-section active-view">
                 <div class="admin-card">
                     <div class="admin-card-title">
@@ -1388,14 +1367,12 @@
                                 </tr>
                             </thead>
                             <tbody id="userAccountsTableBody">
-                                <!-- Dynamic User Accounts -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. ACTIVITY LOGS SECTION -->
             <section id="secLogs" class="admin-section">
                 <div class="admin-card">
                     <div class="admin-card-title">
@@ -1414,14 +1391,12 @@
                                 </tr>
                             </thead>
                             <tbody id="userLogsTableBody">
-                                <!-- Dynamic Logs -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- 3. INVENTORY MANAGEMENT SECTION -->
             <section id="secInventory" class="admin-section">
                 <div class="admin-card">
                     <div class="admin-card-title">
@@ -1435,7 +1410,6 @@
                         </div>
                     </div>
 
-                    <!-- CONFIG TAKE OUT FEE -->
                     <div class="config-box">
                         <div>
                             <strong>Take Out Fee Configuration</strong>
@@ -1447,7 +1421,6 @@
                         </div>
                     </div>
 
-                    <!-- ADD ITEM FORM (WITH EMOJI OR PICTURE UPLOAD) -->
                     <div class="add-item-box">
                         <input type="text" id="newItemName" placeholder="Item Name (e.g. Bangus Sisig)">
                         <select id="newItemCategory">
@@ -1476,14 +1449,12 @@
                                 </tr>
                             </thead>
                             <tbody id="inventoryTableBody">
-                                <!-- Dynamic Inventory Rows -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- 4. SALES SUMMARY REPORTS SECTION -->
             <section id="secReports" class="admin-section">
                 <div class="admin-card">
                     <div class="admin-card-title">
@@ -1511,7 +1482,6 @@
                 </div>
             </section>
 
-            <!-- 5. COMPLETE SALES HISTORY SECTION -->
             <section id="secSalesHistory" class="admin-section">
                 <div class="admin-card">
                     <div class="admin-card-title">
@@ -1534,7 +1504,6 @@
                                 </tr>
                             </thead>
                             <tbody id="salesHistoryTableBody">
-                                <!-- Dynamic Sales History -->
                             </tbody>
                         </table>
                     </div>
@@ -1543,7 +1512,6 @@
         </div>
     </div>
 
-    <!-- ================= TRANSACTION RECEIPT MODAL ================= -->
     <div id="receiptModal" class="modal-overlay">
         <div class="modal-card">
             <div id="receiptPrintArea" class="receipt-container">
@@ -1613,7 +1581,6 @@
         </div>
     </div>
 
-    <!-- ================= SALES REPORT RECEIPT MODAL ================= -->
     <div id="salesReportModal" class="modal-overlay">
         <div class="modal-card">
             <div id="salesReportPrintArea" class="receipt-container">
@@ -1654,9 +1621,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT -->
     <script>
-        // DOM Elements
         const loginWrapper = document.getElementById("loginWrapper");
         const posWrapper = document.getElementById("posWrapper");
         const adminWrapper = document.getElementById("adminWrapper");
@@ -1665,7 +1630,6 @@
         const forgotPasswordForm = document.getElementById("forgotPasswordForm");
         const message = document.getElementById("message");
 
-        // CLOUD-BASED ARRAYS & CONFIG
         let accounts = [];
         let userActivityLogs = [];
         let menuItems = [];
@@ -1680,10 +1644,8 @@
         let currentCategory = 'all';
         let currentReportFilter = 'day';
 
-        // INITIALIZE CLOUD DATA FROM FIREBASE FIRESTORE WITH REALTIME LISTENERS
         async function initCloudData() {
             try {
-                // 1. Accounts initial check and default admin setup
                 const accSnap = await window.getDocsData(window.colRef("accounts"));
                 if (accSnap.empty) {
                     const defaultAdmin = { 
@@ -1702,7 +1664,6 @@
                     await window.setDocData(window.docRef("accounts", "1"), defaultAdmin);
                 }
 
-                // 2. Menu Items initial check and default menu setup
                 const menuSnap = await window.getDocsData(window.colRef("menu"));
                 if (menuSnap.empty) {
                     const defaultMenu = [
@@ -1724,7 +1685,7 @@
                     }
                 }
 
-                // SETUP REAL-TIME LISTENERS (`onSnapshot`) FOR LIVE MULTI-DEVICE SYNC
+                // REAL-TIME LISTENERS PARA SA MENU, ACCOUNTS, AT SALES (TWO-WAY SYNC)
                 window.onSnapshotData(window.colRef("menu"), (snapshot) => {
                     menuItems = [];
                     snapshot.forEach(d => menuItems.push(d.data()));
@@ -1753,7 +1714,6 @@
             }
         }
 
-        // SAVE / UPDATE INDIVIDUAL DOCUMENTS IN FIRESTORE
         async function saveAccountToCloud(acc) {
             await window.setDocData(window.docRef("accounts", String(acc.id)), acc);
         }
@@ -1781,7 +1741,6 @@
             }
         }
 
-        // AUTO RESTORE SESSION ON LOAD
         function checkAutoRestoreSession() {
             if (currentUser) {
                 loginWrapper.style.display = "none";
@@ -1805,7 +1764,6 @@
             }
         }
 
-        // SWITCH BETWEEN ADMIN DASHBOARD AND POS MODE
         function switchToPOS() {
             if (!currentUser) {
                 alert("Please log in first.");
@@ -1870,7 +1828,6 @@
             message.textContent = "";
         }
 
-        // SWITCH BETWEEN 5 ADMIN SECTIONS
         function showAdminSection(sectionId, btnElement) {
             document.querySelectorAll(".admin-section").forEach(sec => {
                 sec.classList.remove("active-view");
@@ -1890,7 +1847,6 @@
             }
         }
 
-        // TOGGLE LOGIN / SIGN UP / FORGOT PASSWORD
         function toggleAuthMode(mode) {
             document.getElementById("loginFormSection").style.display = mode === 'login' ? "block" : "none";
             document.getElementById("signUpFormSection").style.display = mode === 'signup' ? "block" : "none";
@@ -1906,7 +1862,6 @@
             }
         }
 
-        // TOGGLE PASSWORDS
         document.getElementById("toggleLoginPassword").addEventListener("click", function () {
             const pwd = document.getElementById("loginPassword");
             pwd.type = pwd.type === "password" ? "text" : "password";
@@ -1937,7 +1892,6 @@
             message.className = "message " + type;
         }
 
-        // LOGIN PROCESS
         loginForm.addEventListener("submit", function (e) {
             e.preventDefault();
             const uName = document.getElementById("loginUsername").value.trim();
@@ -1991,7 +1945,6 @@
             }, 800);
         });
 
-        // SIGN UP PROCESS
         signUpForm.addEventListener("submit", async function (e) {
             e.preventDefault();
 
@@ -2052,7 +2005,6 @@
             }, 1800);
         });
 
-        // FORGOT PASSWORD PROCESS
         function loadUserSecurityQuestion() {
             const usernameInput = document.getElementById("forgotUsername").value.trim();
             if (!usernameInput) {
@@ -2114,7 +2066,6 @@
             }, 1800);
         });
 
-        // ADMIN USER & LOGS MANAGEMENT
         function renderUserAccountsTable() {
             const tbody = document.getElementById("userAccountsTableBody");
             tbody.innerHTML = "";
@@ -2242,7 +2193,6 @@
             }
         }
 
-        // POS SYSTEM FUNCTIONS
         function renderMenu() {
             const menuGrid = document.getElementById("menuGrid");
             menuGrid.innerHTML = "";
@@ -2574,7 +2524,6 @@
             updateCartDisplay();
         }
 
-        // SALES REPORT RECEIPT MODAL FUNCTIONS
         function openSalesReportModal() {
             const totalSalesStr = document.getElementById("reportTotalSales").textContent;
             const txCountStr = document.getElementById("reportTotalCount").textContent;
@@ -2595,7 +2544,6 @@
             document.getElementById("salesReportModal").style.display = "none";
         }
 
-        // ADMIN INVENTORY, PRICE, TAKE OUT FEE & ITEM MANAGEMENT
         function renderInventoryTable() {
             document.getElementById("adminTakeoutFeeInput").value = takeoutFeeSetting;
 
