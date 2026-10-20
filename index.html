@@ -540,7 +540,7 @@
             align-items: center;
             justify-content: center;
             gap: 5px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             width: 100%;
         }
 
@@ -576,6 +576,7 @@
             font-weight: 800;
             font-size: 11px;
             cursor: pointer;
+            margin-top: 4px;
         }
 
         .cart-section {
@@ -1648,7 +1649,6 @@
             try {
                 localStorage.removeItem("sisig_current_user_v8");
 
-                // 1. Accounts setup
                 const accSnap = await window.getDocsData(window.colRef("accounts"));
                 if (accSnap.empty) {
                     const defaultAdmin = { 
@@ -1667,7 +1667,6 @@
                     await window.setDocData(window.docRef("accounts", "1"), defaultAdmin);
                 }
 
-                // 2. Menu setup
                 const menuSnap = await window.getDocsData(window.colRef("menu"));
                 if (menuSnap.empty) {
                     const defaultMenu = [
@@ -1689,13 +1688,11 @@
                     }
                 }
 
-                // 3. Settings / Takeout Fee setup
                 const settingsSnap = await window.getDocsData(window.colRef("settings"));
                 if (settingsSnap.empty) {
                     await window.setDocData(window.docRef("settings", "config"), { takeoutFee: 10 });
                 }
 
-                // REAL-TIME LISTENERS (TWO-WAY SYNC KASAMA ANG TAKEOUT FEE)
                 window.onSnapshotData(window.colRef("menu"), (snapshot) => {
                     menuItems = [];
                     snapshot.forEach(d => menuItems.push(d.data()));
@@ -2234,6 +2231,14 @@
                     <div class="stock-badge">Stock: ${item.stock}</div>
                     <div class="price">₱${item.price.toFixed(2)}</div>
                     
+                    <!-- Pangkasama/Pang-edit ng stock sa cashier interface -->
+                    <div style="font-size:11px; font-weight:700; color:var(--maroon); margin-bottom:2px;">Edit Stock:</div>
+                    <div class="add-stock-group" style="margin-bottom:6px;">
+                        <input type="number" id="cashier-adjust-${item.id}" class="add-stock-input" value="5" min="1" style="width:50px;">
+                        <button class="action-btn-sm btn-approve" onclick="cashierAdjustStock(${item.id}, 'add')">+</button>
+                        <button class="action-btn-sm btn-delete" onclick="cashierAdjustStock(${item.id}, 'minus')">-</button>
+                    </div>
+
                     <div class="order-qty-control">
                         <button class="order-qty-btn" onclick="changeOrderQty(${item.id}, -1)" ${isOutOfStock ? 'disabled' : ''}>-</button>
                         <input type="number" id="qty-input-${item.id}" class="order-qty-input" value="1" min="1" max="${item.stock}" ${isOutOfStock ? 'disabled' : ''} onchange="validateQtyInput(${item.id})">
@@ -2241,11 +2246,36 @@
                     </div>
 
                     <button class="add-cart-btn" onclick="addSelectedQtyToCart(${item.id})" ${isOutOfStock ? 'disabled' : ''}>
-                        ${isOutOfStock ? 'OUT OF STOCK' : 'ADD'}
+                        ${isOutOfStock ? 'OUT OF STOCK' : 'ADD TO CART'}
                     </button>
                 `;
                 menuGrid.appendChild(card);
             });
+        }
+
+        async function cashierAdjustStock(itemId, actionType) {
+            const input = document.getElementById(`cashier-adjust-${itemId}`);
+            const qtyVal = parseInt(input.value) || 0;
+
+            if (qtyVal <= 0) {
+                alert("Please enter a valid quantity amount.");
+                return;
+            }
+
+            const item = menuItems.find(i => i.id === itemId);
+            if (item) {
+                if (actionType === 'add') {
+                    item.stock += qtyVal;
+                } else if (actionType === 'minus') {
+                    if (item.stock - qtyVal < 0) {
+                        alert("Stock cannot go below zero!");
+                        return;
+                    }
+                    item.stock -= qtyVal;
+                }
+                await saveMenuToCloud(item);
+                renderMenu();
+            }
         }
 
         function filterCategory(category, btnElement) {
@@ -2609,7 +2639,7 @@
             }
 
             await saveTakeoutFeeToCloud(newFee);
-            alert(`Successfully updated Take Out Fee to ₱${newFee.toFixed(2)}! Kusang mag-a-update ito sa cashier.`);
+            alert(`Successfully updated Take Out Fee to ₱${newFee.toFixed(2)}!`);
         }
 
         function addNewMenuItem() {
@@ -2722,7 +2752,7 @@
             const input = document.getElementById(`adjust-stock-${itemId}`);
             const qtyVal = parseInt(input.value) || 0;
 
-            if (qtyValue <= 0 && actionType !== 'add') { // handled below
+            if (qtyVal <= 0) {
                 alert("Please enter a valid quantity amount.");
                 return;
             }
